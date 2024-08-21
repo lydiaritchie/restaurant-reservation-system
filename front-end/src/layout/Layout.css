@@ -2,3 +2,24 @@
   background-color: #393a44;
   min-width: 200px;
 }
+
+.form-components {
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  margin-top: 5;
+  width: 50%;
+}
+
+.buttons {
+  width: 50%;
+  display:flex;
+
+}
+
+button {
+  width: 47%;
+}
+
