@@ -6,6 +6,7 @@
 .form-components {
   display: flex;
   flex-direction: column;
+  font-weight: light;
 }
 
 input {
@@ -16,10 +17,18 @@ input {
 .buttons {
   width: 50%;
   display:flex;
-
 }
 
 button {
   width: 47%;
 }
 
+.purple-button {
+  background-color: rgb(122, 55, 181);
+  color: white;
+}
+
+.purple-button:hover {
+  color:white;
+  background-color:  rgb(79, 24, 126);
+}
