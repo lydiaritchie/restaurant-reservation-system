@@ -7,7 +7,6 @@
   display: flex;
   flex-direction: column;
   font-weight: light;
-  width: 50%;
 }
 
 input {
@@ -16,7 +15,6 @@ input {
 }
 
 .buttons {
-  width: 50%;
   display:flex;
 }
 
@@ -33,3 +31,21 @@ button {
   color:white;
   background-color:  rgb(79, 24, 126);
 }
+
+.reservation-cards{
+  background-color: rgb(255, 255, 255);
+  margin-top: 5px;
+  border-color: rgb(79, 24, 126);
+}
+
+.purple {
+  background-color: rgb(237, 210, 241);
+  border-radius: 2px;
+  align-items: baseline;
+}
+
+.blue {
+  background-color: lightblue;
+  
+}
+

@@ -23,6 +23,22 @@ function Dashboard({ date }) {
     return () => abortController.abort();
   }
 
+  const reservationCards = reservations.map((r) => {
+    return (
+      <div className="card reservation-cards text-center">
+        <div className="card-title p-2 purple">
+          <h5 className="">
+            {r.first_name} {r.last_name}
+          </h5>
+        </div>
+        <div className="card-body p-1">
+          <p className=" blue"> {r.reservation_time} on {r.reservation_date}</p>
+          {r.people > 1 ? (<p>{r.people} people</p>) : (<p>{r.people} person</p>)}
+        </div>
+      </div>
+    );
+  });
+
   return (
     <main>
       <h1>Dashboard</h1>
@@ -30,7 +46,7 @@ function Dashboard({ date }) {
         <h4 className="mb-0">Reservations for date</h4>
       </div>
       <ErrorAlert error={reservationsError} />
-      {JSON.stringify(reservations)}
+      <div className="col">{reservationCards}</div>
     </main>
   );
 }
