@@ -4,8 +4,11 @@ const service = require("./reservations.service");
  * List handler for reservation resources
  */
 async function list(req, res) {
+  const allReservations = await service.listReservations();
+  console.log("allReservations:");
+  console.log(allReservations);
   res.json({
-    data: [],
+    data: allReservations,
   });
 }
 

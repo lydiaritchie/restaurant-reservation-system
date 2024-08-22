@@ -10,6 +10,17 @@ function createReservation(newReservation){
 
 }
 
+function listReservations(){
+    return knex(tableName)
+        .select("*")
+        .then(reservations => reservations)
+        .catch(error => {
+            console.log("Error listing reservations:", error)
+            throw error;
+        })
+}
+
 module.exports = {
     createReservation,
+    listReservations,
 }
