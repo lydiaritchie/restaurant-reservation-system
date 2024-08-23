@@ -10,9 +10,12 @@ function createReservation(newReservation){
 
 }
 
-function listReservations(){
+function listReservations(date){
+    
     return knex(tableName)
         .select("*")
+        .where({reservation_date: date})
+        .orderBy("reservation_time", "asc")
         .then(reservations => reservations)
         .catch(error => {
             console.log("Error listing reservations:", error)

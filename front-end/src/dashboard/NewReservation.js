@@ -71,7 +71,7 @@ function NewReservations() {
             name="first_name"
             onChange={handleChange}
             value={formData.name}
-            required
+
           />
         </label>
 
@@ -81,7 +81,7 @@ function NewReservations() {
             name="last_name"
             onChange={handleChange}
             value={formData.name}
-            required
+
           />
         </label>
 
@@ -91,7 +91,7 @@ function NewReservations() {
             name="mobile_number"
             onChange={handleChange}
             value={formData.name}
-            required
+
           />
           {errorMessages["mobile_number"] ? 
           (<small className="alert alert-danger">Must be 10 digits long</small>) : <></>}
@@ -105,7 +105,7 @@ function NewReservations() {
             onChange={handleChange}
             value={formData.name}
             min={new Date().toISOString().split('T')[0]}
-            required
+
           />
         </label>
 
@@ -116,7 +116,7 @@ function NewReservations() {
             type="time"
             onChange={handleChange}
             value={formData.name}
-            required
+
           />
         </label>
 
@@ -128,7 +128,7 @@ function NewReservations() {
             min="0"
             onChange={handleChange}
             value={formData.name}
-            required
+
           />
         </label>
 
