@@ -50,6 +50,7 @@ function NewReservations() {
     event.preventDefault();
     if(!Object.values(errorMessages).includes(true)){
         try{
+            console.log("formData:", formData);
             await createReservation(formData);
             history.push(`/dashboard?date=${formData.reservation_date}`);
         } catch (error) {

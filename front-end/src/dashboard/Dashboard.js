@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { listReservations } from "../utils/api";
 import { useLocation, useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
-import { today, formatAsDate } from "../utils/date-time";
+import { today } from "../utils/date-time";
 
 /**
  * Defines the dashboard page.
@@ -16,11 +16,10 @@ function Dashboard({ date }) {
   const queryParams = new URLSearchParams(location.search);
   const queryDate = queryParams.get("date");
 
-  if (queryDate) {
-    date = queryDate;
-  }
+  if (queryDate) date = queryDate;
+  
 
-  console.log("queryDate:", queryDate);
+  //console.log("queryDate:", queryDate);
 
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
