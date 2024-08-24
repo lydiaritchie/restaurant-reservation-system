@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createReservation } from "../utils/api";
-import ErrorAlert from "../layout/ErrorAlert";
+//import ErrorAlert from "../layout/ErrorAlert";
 
 /**
  * Page to create a new reservation.
@@ -51,7 +51,7 @@ function NewReservations() {
     if(!Object.values(errorMessages).includes(true)){
         try{
             await createReservation(formData);
-            history.push("/dashboard");
+            history.push(`/dashboard?date=${formData.reservation_date}`);
         } catch (error) {
             console.log(error);
             //ErrorAlert();
@@ -70,7 +70,7 @@ function NewReservations() {
           <input
             name="first_name"
             onChange={handleChange}
-            value={formData.name}
+            value={formData.first_name}
 
           />
         </label>
@@ -80,7 +80,7 @@ function NewReservations() {
           <input
             name="last_name"
             onChange={handleChange}
-            value={formData.name}
+            value={formData.last_name}
 
           />
         </label>
@@ -90,7 +90,7 @@ function NewReservations() {
           <input
             name="mobile_number"
             onChange={handleChange}
-            value={formData.name}
+            value={formData.mobile_number}
 
           />
           {errorMessages["mobile_number"] ? 
@@ -103,7 +103,7 @@ function NewReservations() {
             name="reservation_date"
             type="date"
             onChange={handleChange}
-            value={formData.name}
+            value={formData.reservation_date}
             min={new Date().toISOString().split('T')[0]}
 
           />
@@ -115,7 +115,7 @@ function NewReservations() {
             name="reservation_time"
             type="time"
             onChange={handleChange}
-            value={formData.name}
+            value={formData.reservation_time}
 
           />
         </label>
@@ -127,14 +127,14 @@ function NewReservations() {
             type="number"
             min="0"
             onChange={handleChange}
-            value={formData.name}
+            value={formData.people}
 
           />
         </label>
 
         <div className="buttons justify-content-between">
           <button className="btn btn-light" onClick={() => history.goBack()} >Cancel</button>
-          <button className="btn purple-button">Submit</button>
+          <button className="btn purple-button" type="submit">Submit</button>
         </div>
       </form>
     </main>
