@@ -29,7 +29,7 @@ async function validateInputs(req, res, next) {
     return next({ status: 400, message: "No inputs sent." });
   }
   //specific checks for people
-  if (typeof inputs["people"] != "number") {
+  if (typeof inputs["people"] != "number" || isNaN(Number(inputs["people"]))) {
     return next({ status: 400, message: "people isn't a number" });
   }
   if (inputs["people"] === 0) {
