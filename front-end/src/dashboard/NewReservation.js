@@ -134,7 +134,7 @@ function NewReservations() {
         </label>
 
         <div className="buttons justify-content-between">
-          <button className="btn btn-light" onClick={() => history.goBack()} >Cancel</button>
+          <button className="btn btn-light" type="button" onClick={() => history.goBack()} >Cancel</button>
           <button className="btn purple-button" type="submit">Submit</button>
         </div>
       </form>

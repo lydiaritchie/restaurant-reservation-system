@@ -29,9 +29,10 @@ async function validateInputs(req, res, next) {
     return next({ status: 400, message: "No inputs sent." });
   }
   //specific checks for people
-  if (typeof inputs["people"] != "number" || isNaN(Number(inputs["people"]))) {
+  if (isNaN(Number(inputs["people"]))) {
     return next({ status: 400, message: "people isn't a number" });
   }
+
   if (inputs["people"] === 0) {
     return next({ status: 400, message: "people is 0" });
   }
@@ -71,7 +72,7 @@ async function create(req, res, next) {
     res.status(201).json({ data: createdReservation });
   } catch (error) {
     console.log("Error creating reservation:", error);
-    next(error);
+    next({status: 400, message: "Could no create reservation"});
   }
 }
 

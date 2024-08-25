@@ -57,7 +57,7 @@ function Dashboard({ date }) {
 
   const reservationCards = reservations.map((r) => {
     return (
-      <li className="list-group-item reservation-cards text-center">
+      <li key={r.reservation_id} className="list-group-item reservation-cards text-center">
         <div className="">
           <h5 className="">
             {r.first_name} {r.last_name}
