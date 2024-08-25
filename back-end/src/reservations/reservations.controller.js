@@ -12,6 +12,32 @@ async function list(req, res) {
   });
 }
 
+async function validatePeople(req, res, next) {
+
+  const input = req.body.data;
+  const people = input.people;
+
+  //converts string into a number
+  const peopleNum = Number(people);
+  console.log("people:", people);
+
+    //undefined, 0, null, or empty
+    if (people === undefined || people === null || people === "") {
+      console.log(people, "is not a number");
+      return next({ status: 400, message: "people is null, empty, 0 or undefined" });
+    }
+
+    if(isNaN(peopleNum) || !Number.isInteger(peopleNum)){
+      return next({ status: 400, message: "people is not a number" });
+    }
+
+    if(peopleNum <= 0){
+      return next({ status: 400, message: "people must be greater than 0" });
+    }
+
+    next();
+}
+
 async function validateInputs(req, res, next) {
   const inputs = req.body.data;
   console.log("inputs:", inputs);
@@ -30,7 +56,11 @@ async function validateInputs(req, res, next) {
 
   //check missing and empty properties
   for (const property of allProperties) {
-    if (inputs[property] === undefined || inputs[property] === "" || inputs[property] === null) {
+    if (
+      inputs[property] === undefined ||
+      inputs[property] === "" ||
+      inputs[property] === null
+    ) {
       return next({ status: 400, message: `${property} is missing` });
     }
   }
@@ -40,25 +70,6 @@ async function validateInputs(req, res, next) {
   if (isNaN(date.getTime())) {
     return next({ status: 400, message: "reservation_date is not a date" });
   }
-
-  //specific checks for people
-  //const peopleNum = Number(inputs.people);
-
-    if (inputs.people === 0) {
-     console.log("people is 0");
-    return next({ status: 400, message: "people is 0" });
-  }
-
-  console.log("people type:", typeof inputs.people);
-
-  //console.log("inputs.people:", inputs.people);
-  //console.log("peopleNum:", peopleNum);
-  if (inputs.people === "" || typeof inputs.people != "number") {
-    //console.log("inputs.people:", inputs.people, typeof inputs.people);
-    console.log(inputs.people, "is not a number");
-    return next({ status: 400, message: "people is not a number" });
-  }
-
 
   //validate time
   const regexp = /^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$/;
@@ -80,5 +91,5 @@ async function create(req, res, next) {
 
 module.exports = {
   list: asyncErrorBoundary(list),
-  create: [asyncErrorBoundary(validateInputs), asyncErrorBoundary(create)],
+  create: [asyncErrorBoundary(validateInputs), asyncErrorBoundary(validatePeople), asyncErrorBoundary(create)],
 };

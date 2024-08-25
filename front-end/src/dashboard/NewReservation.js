@@ -16,7 +16,7 @@ function NewReservations() {
     mobile_number: "",
     reservation_date: "",
     reservation_time: "",
-    people: 0,
+    people: 1,
   };
 
   //States to track inputs and errors
