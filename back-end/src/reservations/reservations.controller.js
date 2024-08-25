@@ -13,7 +13,6 @@ async function list(req, res) {
 }
 
 async function validatePeople(req, res, next) {
-
   const input = req.body.data;
   const people = input.people;
 
@@ -21,21 +20,11 @@ async function validatePeople(req, res, next) {
   const peopleNum = Number(people);
   console.log("people:", people);
 
-    //undefined, 0, null, or empty
-    if (people === undefined || people === null || people === "") {
-      console.log(people, "is not a number");
-      return next({ status: 400, message: "people is null, empty, 0 or undefined" });
-    }
+  if (!Number.isInteger(people) || people < 1) {
+    return next({ status: 400, message: "people is not a number" });
+  }
 
-    if(isNaN(peopleNum) || !Number.isInteger(peopleNum)){
-      return next({ status: 400, message: "people is not a number" });
-    }
-
-    if(peopleNum <= 0){
-      return next({ status: 400, message: "people must be greater than 0" });
-    }
-
-    next();
+  next();
 }
 
 async function validateInputs(req, res, next) {
@@ -91,5 +80,9 @@ async function create(req, res, next) {
 
 module.exports = {
   list: asyncErrorBoundary(list),
-  create: [asyncErrorBoundary(validateInputs), asyncErrorBoundary(validatePeople), asyncErrorBoundary(create)],
+  create: [
+    asyncErrorBoundary(validateInputs),
+    asyncErrorBoundary(validatePeople),
+    asyncErrorBoundary(create),
+  ],
 };
