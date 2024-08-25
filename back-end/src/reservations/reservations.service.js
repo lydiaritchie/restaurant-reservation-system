@@ -2,14 +2,14 @@ const knex = require("../db/connection");
 
 const tableName = "reservations";
 
-function createReservation(newReservation) {
+async function createReservation(newReservation) {
   return knex(tableName)
     .insert(newReservation)
     .returning("*")
     .then((createdRecords) => createdRecords[0]);
 }
 
-function listReservations(date) {
+async function listReservations(date) {
   return knex(tableName)
     .select("*")
     .where({ reservation_date: date })

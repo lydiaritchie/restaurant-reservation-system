@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { listReservations } from "../utils/api";
 import { useLocation, useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
-import { today } from "../utils/date-time";
+import { today, previous, next } from "../utils/date-time";
+import useQuery from "../utils/useQuery";
 
 /**
  * Defines the dashboard page.
@@ -13,14 +14,11 @@ import { today } from "../utils/date-time";
 function Dashboard({ date }) {
   const location = useLocation();
   const history = useHistory();
-  const queryParams = new URLSearchParams(location.search);
+  const queryParams = useQuery();
   const queryDate = queryParams.get("date");
 
   if (queryDate) date = queryDate;
   
-
-  //console.log("queryDate:", queryDate);
-
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
 
@@ -36,20 +34,17 @@ function Dashboard({ date }) {
   }
 
   function updateQuery(whereToGo) {
-    let newDate = new Date(date);
     let dateString;
     if (whereToGo === today()) {
       dateString = today();
     }
     //the new date should be one more than the current date
     if (whereToGo === 1) {
-      newDate.setDate(newDate.getDate() + 1);
-      dateString = newDate.toISOString().split('T')[0];
+      dateString = next(date);
     }
     //go back one day
     if (whereToGo === 0) {
-      newDate.setDate(newDate.getDate() - 1);
-      dateString = newDate.toISOString().split('T')[0];
+      dateString = previous(date);
     }
     
     history.push(`${location.pathname}?date=${dateString}`);

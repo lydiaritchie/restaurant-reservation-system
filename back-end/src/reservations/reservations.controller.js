@@ -14,7 +14,6 @@ async function list(req, res) {
 
 async function validateInputs(req, res, next) {
   const inputs = req.body.data;
-  console.log("inputs:", inputs);
 
   const allProperties = [
     "first_name",
@@ -63,15 +62,10 @@ async function validateInputs(req, res, next) {
 }
 
 async function create(req, res, next) {
-  console.log("creating reservation");
-  //console.log(req.body);
-
   try {
     const createdReservation = await service.createReservation(req.body.data);
-    console.log("createdReservation:", createdReservation);
     res.status(201).json({ data: createdReservation });
   } catch (error) {
-    console.log("Error creating reservation:", error);
     next({status: 400, message: "Could no create reservation"});
   }
 }

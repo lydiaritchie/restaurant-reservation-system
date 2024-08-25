@@ -1,7 +1,7 @@
 import React, {  useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createReservation } from "../utils/api";
-//import ErrorAlert from "../layout/ErrorAlert";
+import ErrorAlert from "../layout/ErrorAlert";
 
 /**
  * Page to create a new reservation.
@@ -21,7 +21,7 @@ function NewReservations() {
 
   //States to track inputs and errors
   const [formData, setFormData] = useState({ ...initialFormState });
-  const [errorMessages, setErrorMessages] = useState({});
+
 
   //handle change to form inputs
   function handleChange({ target }) {
@@ -29,37 +29,17 @@ function NewReservations() {
         ...formData,
         [target.name]: target.value,
       });
-    setErrorMessages(validateInputs(formData));
-    console.log(target.name + ": " + target.value);
-  }
-
-  //validate inputs and handle errors
-  function validateInputs(formData){
-    let errors = {};
-    //conditional statement for dashes?
-    if(formData.mobile_number.length > 10 || formData.mobile_number.length < 10){
-      //  errors.mobile_number = true;
-    }
-    const today = new Date().toISOString().split('T')[0]
-    console.log("today: ", today);
-    console.log("reservation_date: ", formData.reservation_date);
-    return errors;
   }
 
   async function handleSubmit(event){
     event.preventDefault();
-    if(!Object.values(errorMessages).includes(true)){
         try{
-            console.log("formData:", formData);
             await createReservation(formData);
             history.push(`/dashboard?date=${formData.reservation_date}`);
         } catch (error) {
             console.log(error);
-            //ErrorAlert();
+            ErrorAlert();
         }
-        
-    }
-
   }
 
   return (
@@ -72,7 +52,7 @@ function NewReservations() {
             name="first_name"
             onChange={handleChange}
             value={formData.first_name}
-
+            required
           />
         </label>
 
@@ -82,7 +62,7 @@ function NewReservations() {
             name="last_name"
             onChange={handleChange}
             value={formData.last_name}
-
+            required
           />
         </label>
 
@@ -92,10 +72,8 @@ function NewReservations() {
             name="mobile_number"
             onChange={handleChange}
             value={formData.mobile_number}
-
+            required
           />
-          {errorMessages["mobile_number"] ? 
-          (<small className="alert alert-danger">Must be 10 digits long</small>) : <></>}
         </label>
 
         <label className="form-components">
@@ -106,7 +84,7 @@ function NewReservations() {
             onChange={handleChange}
             value={formData.reservation_date}
             min={new Date().toISOString().split('T')[0]}
-
+            required
           />
         </label>
 
@@ -117,7 +95,7 @@ function NewReservations() {
             type="time"
             onChange={handleChange}
             value={formData.reservation_time}
-
+            required
           />
         </label>
 
@@ -129,7 +107,7 @@ function NewReservations() {
             min="0"
             onChange={handleChange}
             value={formData.people}
-
+            required
           />
         </label>
 
