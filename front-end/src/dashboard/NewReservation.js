@@ -47,8 +47,8 @@ function NewReservations() {
   }
 
   return (
-    <main>
-      <h4>Create Reservation</h4>
+    <main className="work-sans">
+      <h1>Create Reservation</h1>
       <form className="col" onSubmit={handleSubmit}>
         <label className="form-components">
           First Name:
@@ -115,9 +115,9 @@ function NewReservations() {
           />
         </label>
 
-        <div className="buttons justify-content-between">
-          <button className="btn btn-light" type="button" onClick={() => history.goBack()} >Cancel</button>
-          <button className="btn purple-button" type="submit">Submit</button>
+        <div className="buttons d-flex justify-content-between">
+          <button className="btn btn-outline-dark w-100 " type="button" onClick={() => history.goBack()} >Cancel</button>
+          <button className="btn submit-button w-100 ml-2" type="submit">Submit</button>
         </div>
       </form>
     </main>

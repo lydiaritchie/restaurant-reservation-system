@@ -30,7 +30,11 @@ async function validateInputs(req, res, next) {
 
   //check missing and empty properties
   for (const property of allProperties) {
-    if (inputs[property] === undefined || inputs[property] === "" || inputs[property] === null) {
+    if (
+      inputs[property] === undefined ||
+      inputs[property] === "" ||
+      inputs[property] === null
+    ) {
       return next({ status: 400, message: `${property} is missing` });
     }
   }
@@ -42,10 +46,10 @@ async function validateInputs(req, res, next) {
   }
 
   //specific checks for people
-  //const peopleNum = Number(inputs.people);
+  const peopleNum = Number(inputs.people);
 
-    if (inputs.people === 0) {
-     console.log("people is 0");
+  if (inputs.people === 0) {
+    console.log("people is 0");
     return next({ status: 400, message: "people is 0" });
   }
 
@@ -53,12 +57,11 @@ async function validateInputs(req, res, next) {
 
   //console.log("inputs.people:", inputs.people);
   //console.log("peopleNum:", peopleNum);
-  if (inputs.people === "" || typeof inputs.people != "number") {
+  if (inputs.people === "" || isNaN(peopleNum) || !Number.isInteger(peopleNum)) {
     //console.log("inputs.people:", inputs.people, typeof inputs.people);
     console.log(inputs.people, "is not a number");
     return next({ status: 400, message: "people is not a number" });
   }
-
 
   //validate time
   const regexp = /^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$/;
