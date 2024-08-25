@@ -33,6 +33,10 @@ function NewReservations() {
 
   async function handleSubmit(event){
     event.preventDefault();
+    setFormData({
+      ...formData,
+      "people": Number(formData.people),
+    })
         try{
             await createReservation(formData);
             history.push(`/dashboard?date=${formData.reservation_date}`);
@@ -44,7 +48,7 @@ function NewReservations() {
 
   return (
     <main>
-      <h2>Create Reservation</h2>
+      <h4>Create Reservation</h4>
       <form className="col" onSubmit={handleSubmit}>
         <label className="form-components">
           First Name:
