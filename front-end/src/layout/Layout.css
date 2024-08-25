@@ -7,13 +7,15 @@
 
 
 .side-bar {
-  background-color:#497DF5;
+  background-color: rgb(107, 100, 237);
   min-width: 200px;
 }
 
-h4 {
-  color: rgb(107, 100, 237);
+.date-title {
+
   font-style: italic;
+  display: flex;
+  flex-direction: column;
 }
 
 input {
@@ -28,8 +30,9 @@ input {
 }
 
 .dash-title{
-  margin-top:5px;
+  margin-top:7px;
   display:flex;
+  flex-direction: column;
   align-items:baseline;
   justify-content:space-between;
 }
@@ -75,15 +78,16 @@ input {
 
 }
 
-@media (max-width){
+@media (max-width:310px){
   .dash-title{
     display:flex;
     flex-direction: column;
+    text-align: center;
   }
 }
 
 @media (min-width: 768px){
-  .reservation-cards{
+  .dash-title{
 
   }
 }

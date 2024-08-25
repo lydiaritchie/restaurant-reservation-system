@@ -54,15 +54,14 @@ function Dashboard({ date }) {
     return (
       <li
         key={r.reservation_id}
-        className="shadow-sm list-group-item reservation-cards text-center"
+        className="shadow-sm list-group-item reservation-cards"
       >
         <div className="">
           <h5 className="">
             {r.first_name} {r.last_name}
           </h5>
-          <p className=" ">
-            {r.reservation_time} on {formatDate(r.reservation_date)}
-          </p>
+          <div className="mt-1 fw-bolder">{r.reservation_time}</div>
+          <div className="fs-5">{formatDate(r.reservation_date)}</div>
           {r.people > 1 ? <>{r.people} people</> : <>{r.people} person</>}
         </div>
       </li>
@@ -84,7 +83,7 @@ function Dashboard({ date }) {
       <div className="d-flex-row mb-3">
         <div className="dash-title">
           <h5 className="text-muted">Dashboard</h5>
-          <h4 className="">{formatDate(date)}</h4>
+          <h4 className="date-title">{formatDate(date)}</h4>
         </div>
         <div className="d-flex justify-content-center">
           <div
