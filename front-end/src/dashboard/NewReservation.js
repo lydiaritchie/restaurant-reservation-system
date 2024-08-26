@@ -54,7 +54,7 @@ function NewReservations() {
             history.push(`/dashboard?date=${formData.reservation_date}`);
         } catch (error) {
             console.log(error);
-            ErrorAlert();
+            ErrorAlert(error);
         }
   }
 

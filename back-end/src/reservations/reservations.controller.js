@@ -59,6 +59,21 @@ async function validateInputs(req, res, next) {
   next();
 }
 
+//validate date to not be in the past or a Tuesday
+async function validateDate(req, res, next){
+  const date = req.body.data.reservation_date;
+  const dateObj = new Date(date);
+  const today = new Date().toISOString().split('T')[0];
+  if (date < today){
+    return next({status: 400, message: "Please book in the future"});
+  }
+  else if(dateObj.getDay() === 2){
+    return next({status:400, message: "Restaurant in closed"})
+  }
+  
+  next();
+}
+
 async function create(req, res, next) {
   try {
     const createdReservation = await service.createReservation(req.body.data);
@@ -72,6 +87,7 @@ module.exports = {
   list: asyncErrorBoundary(list),
   create: [
     asyncErrorBoundary(validateInputs),
+    asyncErrorBoundary(validateDate),
     asyncErrorBoundary(create),
   ],
 };
