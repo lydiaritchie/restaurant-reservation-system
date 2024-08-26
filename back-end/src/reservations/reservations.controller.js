@@ -12,24 +12,9 @@ async function list(req, res) {
   });
 }
 
-async function validatePeople(req, res, next) {
-  const input = req.body.data;
-  const people = input.people;
-
-  //converts string into a number
-  const peopleNum = Number(people);
-  console.log("people:", people);
-
-  if (!Number.isInteger(people) || people < 1) {
-    return next({ status: 400, message: "people is not a number" });
-  }
-
-  next();
-}
-
 async function validateInputs(req, res, next) {
   const inputs = req.body.data;
-  console.log("inputs:", inputs);
+
   const allProperties = [
     "first_name",
     "last_name",
@@ -54,15 +39,20 @@ async function validateInputs(req, res, next) {
     }
   }
 
+  //check if people is a number
+  if (!Number.isInteger(inputs.people) || inputs.people < 1) {
+    return next({ status: 400, message: "people is not a number" });
+  }
+
   //validate date
-  const date = new Date(inputs["reservation_date"]);
+  const date = new Date(inputs.reservation_date);
   if (isNaN(date.getTime())) {
     return next({ status: 400, message: "reservation_date is not a date" });
   }
-  
+
   //validate time
   const regexp = /^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$/;
-  if (!regexp.test(inputs["reservation_time"])) {
+  if (!regexp.test(inputs.reservation_time)) {
     return next({ status: 400, message: "reservation_time is not a time" });
   }
 
@@ -82,7 +72,6 @@ module.exports = {
   list: asyncErrorBoundary(list),
   create: [
     asyncErrorBoundary(validateInputs),
-    asyncErrorBoundary(validatePeople),
     asyncErrorBoundary(create),
   ],
 };
