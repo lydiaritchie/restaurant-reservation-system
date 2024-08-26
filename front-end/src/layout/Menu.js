@@ -10,7 +10,8 @@ import { Link } from "react-router-dom";
 
 function Menu() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark align-items-start p-0">
+    <nav className="navbar navbar-expand-lg nav-bar-toggle navbar-dark align-items-start p-0"
+          id="navbarToggleExternalContent">
       <div className="container-fluid d-flex flex-column p-0">
         <Link
           className="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0"

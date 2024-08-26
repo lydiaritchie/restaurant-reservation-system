@@ -1,6 +1,26 @@
+.helvetica {
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", 
+  Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+
 .side-bar {
-  background-color: #393a44;
+  background-color: rgb(107, 100, 237);
   min-width: 200px;
+}
+
+.date-title {
+
+  font-style: italic;
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  margin-top: 5;
+
 }
 
 .form-components {
@@ -9,32 +29,41 @@
   font-weight: light;
 }
 
-input {
-  margin-top: 5;
-
-}
-
-.buttons {
+.dash-title{
+  margin-top:7px;
   display:flex;
+  flex-direction: column;
+  align-items:baseline;
+  justify-content:space-between;
 }
 
-button {
-  width: 47%;
+.dash-btns{
+  color: black;
+  border-radius: 10px;
 }
 
-.purple-button {
-  background-color: rgb(11, 2, 173);
+.dash-btns:hover{
+  color:rgb(107, 100, 237);
+}
+
+.submit-button {
+  background-color: rgb(107, 100, 237);
   color: white;
 }
 
-.purple-button:hover {
+.submit-button:hover {
   color:white;
-  background-color:  rgb(26, 20, 146);
+  background-color: rgb(26, 20, 146);
 }
+
 
 .reservation-cards{
   background-color: rgb(255, 255, 255);
+}
+
+.list{
   margin-top: 10px;
+  max-width: 400px;
 
 }
 
@@ -49,3 +78,16 @@ button {
 
 }
 
+@media (max-width:310px){
+  .dash-title{
+    display:flex;
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (min-width: 768px){
+  .dash-title{
+
+  }
+}

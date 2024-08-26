@@ -18,7 +18,7 @@ function Dashboard({ date }) {
   const queryDate = queryParams.get("date");
 
   if (queryDate) date = queryDate;
-  
+
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
 
@@ -46,60 +46,74 @@ function Dashboard({ date }) {
     if (whereToGo === 0) {
       dateString = previous(date);
     }
-    
+    date = dateString;
     history.push(`${location.pathname}?date=${dateString}`);
   }
 
   const reservationCards = reservations.map((r) => {
     return (
-      <li key={r.reservation_id} className="list-group-item reservation-cards text-center">
+      <li
+        key={r.reservation_id}
+        className="shadow-sm list-group-item reservation-cards"
+      >
         <div className="">
           <h5 className="">
             {r.first_name} {r.last_name}
           </h5>
-          <p className=" ">
-            {r.reservation_time} on {r.reservation_date}
-          </p>
+          <div className="mt-1 fw-bolder">{r.reservation_time}</div>
+          <div className="fs-5">{formatDate(r.reservation_date)}</div>
           {r.people > 1 ? <>{r.people} people</> : <>{r.people} person</>}
         </div>
       </li>
     );
   });
 
+  //format the date for displaying on the top of the page
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
+
   return (
-    <main>
-      <h1>Dashboard</h1>
-      <div className="d-flex-row mb-3 text-center">
-        <h4 className="mb-0">Reservations for date:</h4>
-        <h4>Today: {date}</h4>
-        <div className="buttons justify-content-between">
-          <button 
-            className="btn m-1 purple-button"
+    <main className="helvetica">
+      <div className="d-flex-row mb-3">
+        <div className="dash-title">
+          <h5 className="text-muted">Dashboard</h5>
+          <h4 className="date-title">{formatDate(date)}</h4>
+        </div>
+        <div className="d-flex justify-content-center">
+          <div
+            className=" rounded-3 dash-btns btn"
             onClick={() => {
               updateQuery(0);
-              loadDashboard();
             }}
-            >Back </button>
-          <button
-            className="btn m-1 purple-button"
+          >
+            ← Back
+          </div>
+          <div
+            className="dash-btns btn mx-2"
             onClick={() => {
               updateQuery(today());
-              loadDashboard();
             }}
           >
             Today
-          </button>
-          <button 
-            className="btn m-1 purple-button"
+          </div>
+          <div
+            className="dash-btns btn"
             onClick={() => {
               updateQuery(1);
-              loadDashboard();
             }}
-            >Next</button>
+          >
+            Next →
+          </div>
         </div>
+        <ul className="list-group list">{reservationCards}</ul>
       </div>
       <ErrorAlert error={reservationsError} />
-      <ul className="list-group">{reservationCards}</ul>
     </main>
   );
 }
