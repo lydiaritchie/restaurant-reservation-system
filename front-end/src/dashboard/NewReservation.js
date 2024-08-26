@@ -2,6 +2,7 @@ import React, {  useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
+import { today } from "../utils/date-time";
 
 /**
  * Page to create a new reservation.
@@ -16,15 +17,26 @@ function NewReservations() {
     mobile_number: "",
     reservation_date: "",
     reservation_time: "",
-    people: 1,
+    people: 0,
   };
 
   //States to track inputs and errors
   const [formData, setFormData] = useState({ ...initialFormState });
-
+  const [error, setError] = useState("");
 
   //handle change to form inputs
   function handleChange({ target }) {
+      if(target.name === "reservation_date"){
+        const dateObj = new Date(target.value);
+        if(target.value < today()){
+          setError("Cannot book in the past.");
+        }
+        else if(dateObj.getDay() === 2){
+          setError("Cannot book on Tuesdays.");
+        } else {
+          setError(false);
+        }
+      }
       setFormData({
         ...formData,
         [target.name]: target.value,
@@ -48,7 +60,7 @@ function NewReservations() {
 
   return (
     <main className="work-sans">
-      <h1>Create Reservation</h1>
+      <h3 className="date-title m-3">Create Reservation</h3>
       <form className="col" onSubmit={handleSubmit}>
         <label className="form-components">
           First Name:
@@ -87,7 +99,6 @@ function NewReservations() {
             type="date"
             onChange={handleChange}
             value={formData.reservation_date}
-            min={new Date().toISOString().split('T')[0]}
             required
           />
         </label>
@@ -114,7 +125,11 @@ function NewReservations() {
             required
           />
         </label>
-
+        {error ? 
+          (<div className="alert alert-danger">
+            {error}
+          </div>) : <></>}
+        
         <div className="buttons d-flex justify-content-between">
           <button className="btn btn-outline-dark w-100 " type="button" onClick={() => history.goBack()} >Cancel</button>
           <button className="btn submit-button w-100 ml-2" type="submit">Submit</button>
