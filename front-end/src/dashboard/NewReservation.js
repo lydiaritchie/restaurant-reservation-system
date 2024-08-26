@@ -16,7 +16,7 @@ function NewReservations() {
     mobile_number: "",
     reservation_date: "",
     reservation_time: "",
-    people: 0,
+    people: 1,
   };
 
   //States to track inputs and errors
@@ -33,12 +33,12 @@ function NewReservations() {
 
   async function handleSubmit(event){
     event.preventDefault();
-    setFormData({
+    const newReservation  = {
       ...formData,
-      "people": Number(formData.people),
-    })
+      people: Number(formData.people),
+    };
         try{
-            await createReservation(formData);
+            await createReservation(newReservation);
             history.push(`/dashboard?date=${formData.reservation_date}`);
         } catch (error) {
             console.log(error);

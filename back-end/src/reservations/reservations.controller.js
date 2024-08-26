@@ -12,6 +12,21 @@ async function list(req, res) {
   });
 }
 
+async function validatePeople(req, res, next) {
+  const input = req.body.data;
+  const people = input.people;
+
+  //converts string into a number
+  const peopleNum = Number(people);
+  console.log("people:", people);
+
+  if (!Number.isInteger(people) || people < 1) {
+    return next({ status: 400, message: "people is not a number" });
+  }
+
+  next();
+}
+
 async function validateInputs(req, res, next) {
   const inputs = req.body.data;
   console.log("inputs:", inputs);
@@ -44,25 +59,7 @@ async function validateInputs(req, res, next) {
   if (isNaN(date.getTime())) {
     return next({ status: 400, message: "reservation_date is not a date" });
   }
-
-  //specific checks for people
-  const peopleNum = Number(inputs.people);
-
-  if (inputs.people === 0) {
-    console.log("people is 0");
-    return next({ status: 400, message: "people is 0" });
-  }
-
-  console.log("people type:", typeof inputs.people);
-
-  //console.log("inputs.people:", inputs.people);
-  //console.log("peopleNum:", peopleNum);
-  if (inputs.people === "" || isNaN(peopleNum) || !Number.isInteger(peopleNum)) {
-    //console.log("inputs.people:", inputs.people, typeof inputs.people);
-    console.log(inputs.people, "is not a number");
-    return next({ status: 400, message: "people is not a number" });
-  }
-
+  
   //validate time
   const regexp = /^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$/;
   if (!regexp.test(inputs["reservation_time"])) {
@@ -83,5 +80,9 @@ async function create(req, res, next) {
 
 module.exports = {
   list: asyncErrorBoundary(list),
-  create: [asyncErrorBoundary(validateInputs), asyncErrorBoundary(create)],
+  create: [
+    asyncErrorBoundary(validateInputs),
+    asyncErrorBoundary(validatePeople),
+    asyncErrorBoundary(create),
+  ],
 };
