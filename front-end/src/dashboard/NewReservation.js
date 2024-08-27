@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { createReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
@@ -24,38 +24,72 @@ function NewReservations() {
   const [formData, setFormData] = useState({ ...initialFormState });
   const [error, setError] = useState("");
 
-  //handle change to form inputs
-  function handleChange({ target }) {
-      if(target.name === "reservation_date"){
-        const dateObj = new Date(target.value);
-        if(target.value < today()){
-          setError("Cannot book in the past.");
-        }
-        else if(dateObj.getDay() === 2){
-          setError("Cannot book on Tuesdays.");
-        } else {
-          setError(false);
-        }
-      }
-      setFormData({
-        ...formData,
-        [target.name]: target.value,
-      });
+  //helper function validate date
+  function validateDate(date) {
+    const dateObj = new Date(date);
+    console.log(dateObj);
+    if (date < today()) {
+      setError("Cannot book before today");
+    } else if (dateObj.getDay() === 2) {
+      setError("Canot book on Tuesdays");
+    } else {
+      setError(false);
+    }
   }
 
-  async function handleSubmit(event){
+  //helper function validate time
+  function validateTime(time) {
+    if (!error) {
+      if (time < "10:30" || time > "21:30") {
+        setError("Reservation must be after 10:30 am");
+      } else {
+        setError(false);
+      }
+    }
+  }
+
+  function validateDateTime(date, time) {
+    if (!error) {
+      const dateTimeString = formData.reservation_date + "T" + formData.reservation_time;
+      const dateTimeObj = new Date(dateTimeString);
+      const todayObj = new Date();
+      console.log("dateTimeObj:", dateTimeObj);
+      if (dateTimeObj < todayObj) {
+        setError("Cannot book");
+        console.log("in the past and error is:");
+        console.log(error);
+      }
+    }
+  }
+
+  //handle change to form inputs
+  async function handleChange({ target }) {
+    if (target.name === "reservation_date") {
+      validateDate(target.value);
+    }
+
+    setFormData({
+      ...formData,
+      [target.name]: target.value,
+    });
+  }
+
+  async function handleSubmit(event) {
+    validateTime(formData.reservation_time);
+    validateDateTime();
+    
     event.preventDefault();
-    const newReservation  = {
+    const newReservation = {
       ...formData,
       people: Number(formData.people),
     };
-        try{
-            await createReservation(newReservation);
-            history.push(`/dashboard?date=${formData.reservation_date}`);
-        } catch (error) {
-            console.log(error);
-            ErrorAlert(error);
-        }
+    try {
+      await createReservation(newReservation);
+      history.push(`/dashboard?date=${formData.reservation_date}`);
+    } catch (error) {
+      console.log(error);
+      ErrorAlert(error);
+    }
   }
 
   return (
@@ -125,14 +159,20 @@ function NewReservations() {
             required
           />
         </label>
-        {error ? 
-          (<div className="alert alert-danger">
-            {error}
-          </div>) : <></>}
-        
+
+        {error ? <div className="alert alert-danger">{error}</div> : <></>}
+
         <div className="buttons d-flex justify-content-between">
-          <button className="btn btn-outline-dark w-100 " type="button" onClick={() => history.goBack()} >Cancel</button>
-          <button className="btn submit-button w-100 ml-2" type="submit">Submit</button>
+          <button
+            className="btn btn-outline-dark w-100 "
+            type="button"
+            onClick={() => history.goBack()}
+          >
+            Cancel
+          </button>
+          <button className="btn submit-button w-100 ml-2" type="submit">
+            Submit
+          </button>
         </div>
       </form>
     </main>
