@@ -69,6 +69,19 @@ export async function listReservations(params, signal) {
 }
 
 /**
+ * Retrieves all existing tables.
+ * @returns {Promise<[table]>}
+ */
+
+export async function listTables(params, signal){
+  const url = new URL(`${API_BASE_URL}/tables`);
+  Object.entries(params).forEach(([key, value]) =>
+    url.searchParams.append(key, value.toString())
+  );
+  return await fetchJson(url, {headers, signal}, []);
+}
+
+/**
  * Creates a new reservation.
  */
 
@@ -81,4 +94,20 @@ export async function createReservation(newReservation, signal){
     signal,
   };
   return await fetchJson(url, options, newReservation);
+}
+
+
+/**
+ * Create a new table.
+ */
+
+export async function createTable(newTable, signal){
+  const url = `${API_BASE_URL}/tables`;
+  const options = {
+    method: "POST",
+    headers,
+    body: JSON.stringify({data: newTable}),
+    signal,
+  };
+  return await fetchJson(url, options, newTable);
 }

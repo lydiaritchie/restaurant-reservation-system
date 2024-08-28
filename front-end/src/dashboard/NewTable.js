@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
+import { createTable } from "../utils/api";
 
 /**
  * Page to create a new table.
@@ -24,8 +25,13 @@ function NewTable() {
   }
 
   async function handleSubmit(event){
+    event.preventDefault();
+
+    const newTable = {...formData};
+    console.log(newTable);
     try{
         //saves the table to the database 
+        await createTable(newTable);
         history.push(`/dashboard`);
     } catch(error) {
         console.log(error);
