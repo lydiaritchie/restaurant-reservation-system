@@ -97,7 +97,7 @@ function NewReservations() {
       <h3 className="date-title m-3">Create Reservation</h3>
       <form className="col" onSubmit={handleSubmit}>
         <label className="form-components">
-          First Name:
+          First Name
           <input
             name="first_name"
             onChange={handleChange}
@@ -107,7 +107,7 @@ function NewReservations() {
         </label>
 
         <label className="form-components">
-          Last Name:
+          Last Name
           <input
             name="last_name"
             onChange={handleChange}
@@ -117,7 +117,7 @@ function NewReservations() {
         </label>
 
         <label className="form-components fs-5">
-          Phone Number:
+          Phone Number
           <input
             name="mobile_number"
             onChange={handleChange}
@@ -127,7 +127,7 @@ function NewReservations() {
         </label>
 
         <label className="form-components">
-          Date:
+          Date
           <input
             name="reservation_date"
             type="date"
@@ -138,7 +138,7 @@ function NewReservations() {
         </label>
 
         <label className="form-components">
-          Time:
+          Time
           <input
             name="reservation_time"
             type="time"
