@@ -73,11 +73,8 @@ export async function listReservations(params, signal) {
  * @returns {Promise<[table]>}
  */
 
-export async function listTables(params, signal){
+export async function listTables(signal){
   const url = new URL(`${API_BASE_URL}/tables`);
-  Object.entries(params).forEach(([key, value]) =>
-    url.searchParams.append(key, value.toString())
-  );
   return await fetchJson(url, {headers, signal}, []);
 }
 

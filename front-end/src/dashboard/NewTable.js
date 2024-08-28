@@ -27,7 +27,10 @@ function NewTable() {
   async function handleSubmit(event){
     event.preventDefault();
 
-    const newTable = {...formData};
+    const newTable = {
+      table_name: formData.table_name,
+      capacity: Number(formData.capacity),
+    };
     console.log(newTable);
     try{
         //saves the table to the database 
@@ -50,6 +53,7 @@ function NewTable() {
           name="table_name" 
           value={formData.table_name}
           onChange={handleChange}
+          minLength="2"
           required
           />
         </label>

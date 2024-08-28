@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { listReservations } from "../utils/api";
+import { listReservations, listTables } from "../utils/api";
 import { useLocation, useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import { today, previous, next } from "../utils/date-time";
@@ -20,7 +20,9 @@ function Dashboard({ date }) {
   if (queryDate) date = queryDate;
 
   const [reservations, setReservations] = useState([]);
+  const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
+  const [tablesError, setTablesError] = useState(null);
 
   useEffect(loadDashboard, [date]);
 
@@ -30,6 +32,7 @@ function Dashboard({ date }) {
     listReservations({ date }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
+    listTables(abortController.signal).then(setTables).catch(setTablesError);
     return () => abortController.abort();
   }
 
@@ -56,13 +59,39 @@ function Dashboard({ date }) {
         key={r.reservation_id}
         className="shadow-sm list-group-item reservation-cards"
       >
-        <div className="">
-          <h5 className="">
-            {r.first_name} {r.last_name}
-          </h5>
-          <div className="mt-1 fw-bolder">{r.reservation_time}</div>
-          <div className="fs-5">{formatDate(r.reservation_date)}</div>
-          {r.people > 1 ? <>{r.people} people</> : <>{r.people} person</>}
+        <div className="d-flex row">
+          <div className="col-9">
+            <h5 className="">
+              {r.first_name} {r.last_name}
+            </h5>
+            <div className="font-italic">{r.mobile_number}</div>
+            <div className="mt-1 font-weight-bold">{r.reservation_time}</div>
+            <div className="fs-5">{formatDate(r.reservation_date)}</div>
+            {r.people > 1 ? <>{r.people} people</> : <>{r.people} person</>}
+          </div>
+
+          <div className="col d-flex align-items-end mb-1 ">
+            <a
+              className="btn submit-button"
+              href={`/reservations/${r.reservation_id}/seat`}
+            >
+              Seat
+            </a>
+          </div>
+        </div>
+      </li>
+    );
+  });
+
+  const tableCards = tables.map((t) => {
+    return (
+      <li
+        key={t.table_id}
+        className="shadow-sm list-group-item reservation-cards"
+      >
+        <div className="d-flex row">
+          <div className="col">Table {t.table_name}</div>
+          <div className="col">Capacity: {t.capacity}</div>
         </div>
       </li>
     );
@@ -81,39 +110,57 @@ function Dashboard({ date }) {
   return (
     <main className="helvetica">
       <div className="d-flex-row mb-3">
-        <div className="dash-title">
+        <div className="dash-title row align-items-center">
           <h5 className="text-muted">Dashboard</h5>
           <h4 className="date-title">{formatDate(date)}</h4>
+
+          <div className="justify-content-center">
+            <div
+              className=" rounded-3 dash-btns btn"
+              onClick={() => {
+                updateQuery(0);
+              }}
+            >
+              ← Back
+            </div>
+
+            <div
+              className="dash-btns btn mx-2"
+              onClick={() => {
+                updateQuery(today());
+              }}
+            >
+              Today
+            </div>
+
+            <div
+              className="dash-btns btn"
+              onClick={() => {
+                updateQuery(1);
+              }}
+            >
+              Next →
+            </div>
+          </div>
         </div>
-        <div className="d-flex justify-content-center">
-          <div
-            className=" rounded-3 dash-btns btn"
-            onClick={() => {
-              updateQuery(0);
-            }}
-          >
-            ← Back
-          </div>
-          <div
-            className="dash-btns btn mx-2"
-            onClick={() => {
-              updateQuery(today());
-            }}
-          >
-            Today
-          </div>
-          <div
-            className="dash-btns btn"
-            onClick={() => {
-              updateQuery(1);
-            }}
-          >
-            Next →
-          </div>
+        <div className="">
+          <ul className="list-group list ml-3">
+            <div className="d-flex row mx-2 justify-content-between">
+              <h4>Reservations:</h4>
+            <a href="#tables">Tables ↓</a>
+            </div>
+            
+            {reservationCards}
+          </ul>
+
+          <ul id="tables" className="list-group list ml-3">
+            <h4>Tables</h4>
+            {tableCards}
+          </ul>
         </div>
-        <ul className="list-group list">{reservationCards}</ul>
       </div>
       <ErrorAlert error={reservationsError} />
+      <ErrorAlert error={tablesError} />
     </main>
   );
 }
