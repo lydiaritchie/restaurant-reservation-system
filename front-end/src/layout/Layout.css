@@ -57,7 +57,8 @@ input {
 
 
 .reservation-cards{
-  background-color: rgb(255, 255, 255);
+
+  justify-content: space-between;
 }
 
 .list{
@@ -77,6 +78,10 @@ input {
 
 }
 
+.id{
+  align-items: end;
+}
+
 @media (max-width:310px){
   .dash-title{
     display:flex;
@@ -86,5 +91,20 @@ input {
 }
 
 @media (min-width: 768px){
+
+}
+
+@media (max-width: 348px){
+  .reservation-cards{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .id{
+    margin: 0;
+    align-items: center;
+  }
 
 }

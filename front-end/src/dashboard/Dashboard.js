@@ -55,11 +55,9 @@ function Dashboard({ date }) {
 
   const reservationCards = reservations.map((r) => {
     return (
-      <li
-        key={r.reservation_id}
-        className="shadow-sm list-group-item reservation-cards"
-      >
-        <div className="d-flex row">
+      <li key={r.reservation_id} className="shadow-sm list-group-item">
+        <div className="d-flex row justify-content-between align-items reservation-cards">
+
           <div className="col-9">
             <h5 className="">
               {r.first_name} {r.last_name}
@@ -70,14 +68,16 @@ function Dashboard({ date }) {
             {r.people > 1 ? <>{r.people} people</> : <>{r.people} person</>}
           </div>
 
-          <div className="col d-flex align-items-end mb-1 ">
+          <div className="d-flex col-3 flex-column id">
+            <div className="">ID: {r.reservation_id}</div>
             <a
-              className="btn submit-button"
+              className="btn submit-button mt-auto"
               href={`/reservations/${r.reservation_id}/seat`}
             >
               Seat
             </a>
           </div>
+
         </div>
       </li>
     );
@@ -90,7 +90,7 @@ function Dashboard({ date }) {
         className="shadow-sm list-group-item reservation-cards"
       >
         <div className="d-flex row">
-          <div className="col">Table {t.table_name}</div>
+          <div className="col">Table: {t.table_name}</div>
           <div className="col">Capacity: {t.capacity}</div>
         </div>
       </li>
@@ -143,20 +143,24 @@ function Dashboard({ date }) {
             </div>
           </div>
         </div>
-        <div className="">
-          <ul className="list-group list ml-3">
-            <div className="d-flex row mx-2 justify-content-between">
-              <h4>Reservations:</h4>
-            <a href="#tables">Tables ↓</a>
-            </div>
-            
-            {reservationCards}
-          </ul>
 
-          <ul id="tables" className="list-group list ml-3">
-            <h4>Tables</h4>
-            {tableCards}
-          </ul>
+        <div className="container">
+          <div className="d-flex flex-column flex-md-row">
+            <ul className="list-group list ml-3 flex-grow-1">
+              <div className="row mx-2 justify-content-between">
+                <h4>Reservations:</h4>
+                <a href="#tables" className="d-md-none">
+                  Tables ↓
+                </a>
+              </div>
+              {reservationCards}
+            </ul>
+
+            <ul id="tables" className="list-group list ml-3 flex-grow-1">
+              <h4>Tables</h4>
+              {tableCards}
+            </ul>
+          </div>
         </div>
       </div>
       <ErrorAlert error={reservationsError} />

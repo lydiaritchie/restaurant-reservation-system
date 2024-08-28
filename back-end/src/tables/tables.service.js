@@ -10,7 +10,14 @@ async function createTable(newTable){
 }
 
 async function listTables(){
-    return knex(tableName).select("*");
+    return knex(tableName)
+    .select("*")
+    .orderBy("table_name", "asc")
+    .then((tables) => tables)
+    .catch((error) => {
+        console.log("Error listing tables:", error);
+        throw error;
+    })
 }
 
 module.exports ={
