@@ -83,6 +83,7 @@ function NewReservations() {
       ...formData,
       people: Number(formData.people),
     };
+    
     try {
       await createReservation(newReservation);
       history.push(`/dashboard?date=${formData.reservation_date}`);

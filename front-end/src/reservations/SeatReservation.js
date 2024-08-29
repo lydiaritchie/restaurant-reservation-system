@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import { getReservation, listTables } from "../utils/api";
+import { setTableReservation } from "../utils/api";
 
 function SeatReservation() {
   const { reservation_id } = useParams();
@@ -49,25 +50,26 @@ function SeatReservation() {
   //handle change
   async function handleChange({ target }) {
     //check if capactiy can handle
-    const capacity = target.options[target.selectedIndex].getAttribute('data-capacity');
+    const capacity =
+      target.options[target.selectedIndex].getAttribute("data-capacity");
     console.log(capacity);
-    if(reservation.capacity > capacity){
-
+    if (reservation.capacity > capacity) {
     }
     setOption(target.value);
   }
 
-  //handle submit 
+  //handle submit
   //set the forigen key to reservation_id
+  //pass in the table_id and reservation_id
   async function handleSubmit(event) {
     event.preventDefault();
     console.log("submit");
     console.log("option:", option);
-    try{
-
+    try {
+      await setTableReservation([option, reservation.restaurant_id]);
     } catch (error) {
-        console.log(error);
-        ErrorAlert(error);
+      console.log(error);
+      ErrorAlert(error);
     }
   }
 
@@ -123,7 +125,11 @@ function SeatReservation() {
         </div>
       </form>
 
-    {reservationError ? <div className="alert alert-danger">reservationError</div> : <></>}
+      {reservationError ? (
+        <div className="alert alert-danger">reservationError</div>
+      ) : (
+        <></>
+      )}
     </main>
   );
 }

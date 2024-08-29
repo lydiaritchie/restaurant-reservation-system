@@ -117,3 +117,19 @@ export async function createTable(newTable, signal) {
   };
   return await fetchJson(url, options, newTable);
 }
+
+/**
+ * Set the table reservation id
+ * @param {table_id, reservation_id} params 
+ * @param {*} signal 
+ */
+export async function setTableReservation(params, signal){
+  const url = `${API_BASE_URL}/tables`;
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({data: [params.reservation_id, params.table_id]}),
+    signal,
+  };
+  return await fetchJson(url, options, params);
+}
