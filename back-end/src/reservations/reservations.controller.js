@@ -87,9 +87,7 @@ async function create(req, res, next) {
  * Gets the reservation that matches the reservation id passed in.
  */
 async function read(req, res, next){
-  console.log("inside of read in the controller");
   const id = req.params.reservation_id;
-  console.log("id:", id);
   try{
     const reservation = await service.getReservation(id);
     if(!reservation){

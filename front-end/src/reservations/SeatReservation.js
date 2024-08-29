@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import { getReservation, listTables } from "../utils/api";
 
 function SeatReservation() {
   const { reservation_id } = useParams();
+  const history = useHistory();
   const [reservation, setReservation] = useState({});
   const [tables, setTables] = useState([]);
+  //option is an object {table_id: table_capactiy}
+  const [option, setOption] = useState({});
   const [tablesError, setTablesError] = useState(null);
   const [reservationError, setReservationError] = useState(null);
 
@@ -37,11 +40,36 @@ function SeatReservation() {
   //Map tables into options
   const tableOptions = tables.map((t) => {
     return (
-      <option key={t.table_id}>
-        {t.table_name} - {t.capacity}
+      <option key={t.table_id} value={t.table_id} data-capacity={t.capacity}>
+        Table: {t.table_name} Capacity: {t.capacity}
       </option>
     );
   });
+
+  //handle change
+  async function handleChange({ target }) {
+    //check if capactiy can handle
+    const capacity = target.options[target.selectedIndex].getAttribute('data-capacity');
+    console.log(capacity);
+    if(reservation.capacity > capacity){
+
+    }
+    setOption(target.value);
+  }
+
+  //handle submit 
+  //set the forigen key to reservation_id
+  async function handleSubmit(event) {
+    event.preventDefault();
+    console.log("submit");
+    console.log("option:", option);
+    try{
+
+    } catch (error) {
+        console.log(error);
+        ErrorAlert(error);
+    }
+  }
 
   return (
     <main>
@@ -67,7 +95,6 @@ function SeatReservation() {
             <div className="fs-5">
               {formatDate(reservation.reservation_date)}
             </div>
-            
           </div>
 
           <div className="d-flex col-3 flex-column id">
@@ -76,12 +103,27 @@ function SeatReservation() {
         </div>
       </div>
 
-      <div>
-        <select name="table_id" className="mt-3">
+      <form onSubmit={handleSubmit}>
+        <select name="table_id" onChange={handleChange} className="my-3">
           <option value="">-- Select an Option --</option>
           {tableOptions}
         </select>
-      </div>
+
+        <div className="buttons d-flex justify-content-between">
+          <button
+            className="btn btn-outline-dark w-100 "
+            type="button"
+            onClick={() => history.goBack()}
+          >
+            Cancel
+          </button>
+          <button className="btn submit-button w-100 ml-2" type="submit">
+            Submit
+          </button>
+        </div>
+      </form>
+
+    {reservationError ? <div className="alert alert-danger">reservationError</div> : <></>}
     </main>
   );
 }
