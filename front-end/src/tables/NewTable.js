@@ -43,7 +43,7 @@ function NewTable() {
   }
 
   return (
-    <main>
+    <main className="helvetica">
       <h3 className="date-title m-3">Create Table</h3>
       <form className="col" onSubmit={handleSubmit}>
 

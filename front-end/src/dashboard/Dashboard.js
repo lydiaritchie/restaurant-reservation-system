@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { listReservations, listTables } from "../utils/api";
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation, useHistory, Link } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import { today, previous, next } from "../utils/date-time";
 import useQuery from "../utils/useQuery";
@@ -62,20 +62,21 @@ function Dashboard({ date }) {
             <h5 className="">
               {r.first_name} {r.last_name}
             </h5>
-            <div className="font-italic">{r.mobile_number}</div>
+            
             <div className="mt-1 font-weight-bold">{r.reservation_time}</div>
-            <div className="fs-5">{formatDate(r.reservation_date)}</div>
             {r.people > 1 ? <>{r.people} people</> : <>{r.people} person</>}
+            <div className="fs-5">{formatDate(r.reservation_date)}</div>
+            <div className="font-italic">{r.mobile_number}</div>
           </div>
 
           <div className="d-flex col-3 flex-column id">
             <div className="">ID: {r.reservation_id}</div>
-            <a
+            <Link
               className="btn submit-button mt-auto"
-              href={`/reservations/${r.reservation_id}/seat`}
+              to={`/reservations/${r.reservation_id}/seat`}
             >
               Seat
-            </a>
+            </Link>
           </div>
 
         </div>
@@ -92,6 +93,7 @@ function Dashboard({ date }) {
         <div className="d-flex row">
           <div className="col">Table: {t.table_name}</div>
           <div className="col">Capacity: {t.capacity}</div>
+          <div className="col" data-table-id-status={t.table_id}>Free</div>
         </div>
       </li>
     );

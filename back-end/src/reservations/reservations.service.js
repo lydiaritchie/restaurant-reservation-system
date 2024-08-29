@@ -9,12 +9,21 @@ async function createReservation(newReservation) {
     .then((createdRecords) => createdRecords[0]);
 }
 
+async function getReservation(reservation_id){
+  return knex(tableName)
+    .select("*")
+    .where({reservation_id})
+    .catch((error) => {
+      console.log("Error retrieving reservation:", error.message);
+      throw error;
+    })
+}
+
 async function listReservations(date) {
   return knex(tableName)
     .select("*")
     .where({ reservation_date: date })
     .orderBy("reservation_time", "asc")
-    .then((reservations) => reservations)
     .catch((error) => {
       console.log("Error listing reservations:", error);
       throw error;
@@ -23,5 +32,6 @@ async function listReservations(date) {
 
 module.exports = {
   createReservation,
+  getReservation,
   listReservations,
 };

@@ -8,6 +8,7 @@ const router = require("express").Router();
 const notFound = require("../errors/notFound");
 const controller = require("./reservations.controller");
 
-router.route("/").get(controller.list).post(controller.create).all(notFound);
+router.route("/:reservation_id/seat").get(controller.read).all(notFound);
 
+router.route("/").get(controller.list).post(controller.create).all(notFound);
 module.exports = router;

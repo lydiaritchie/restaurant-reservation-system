@@ -73,37 +73,46 @@ export async function listReservations(params, signal) {
  * @returns {Promise<[table]>}
  */
 
-export async function listTables(signal){
+export async function listTables(signal) {
   const url = new URL(`${API_BASE_URL}/tables`);
-  return await fetchJson(url, {headers, signal}, []);
+  return await fetchJson(url, { headers, signal }, []);
+}
+
+/**
+ * Retrieves the reservation with a matching id.
+ * @returns {Promise<{reservation}>}
+ */
+
+export async function getReservation(reservation_id, signal) {
+  const url = new URL(`${API_BASE_URL}/reservations/${reservation_id}/seat`);
+  return await fetchJson(url, { signal }, []);
 }
 
 /**
  * Creates a new reservation.
  */
 
-export async function createReservation(newReservation, signal){
+export async function createReservation(newReservation, signal) {
   const url = `${API_BASE_URL}/reservations`;
   const options = {
     method: "POST",
     headers,
-    body: JSON.stringify({data: newReservation}),
+    body: JSON.stringify({ data: newReservation }),
     signal,
   };
   return await fetchJson(url, options, newReservation);
 }
 
-
 /**
  * Create a new table.
  */
 
-export async function createTable(newTable, signal){
+export async function createTable(newTable, signal) {
   const url = `${API_BASE_URL}/tables`;
   const options = {
     method: "POST",
     headers,
-    body: JSON.stringify({data: newTable}),
+    body: JSON.stringify({ data: newTable }),
     signal,
   };
   return await fetchJson(url, options, newTable);

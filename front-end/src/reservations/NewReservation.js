@@ -41,7 +41,7 @@ function NewReservations() {
   function validateTime(time) {
     if (!error) {
       if (time < "10:30" || time > "21:30") {
-        setError("Reservation must be after 10:30 am");
+        setError("Reservation between 10:30 am and 9:30 pm");
       } else {
         setError(false);
       }
@@ -93,7 +93,7 @@ function NewReservations() {
   }
 
   return (
-    <main className="work-sans">
+    <main className="helvetica">
       <h3 className="date-title m-3">Create Reservation</h3>
       <form className="col" onSubmit={handleSubmit}>
         <label className="form-components">

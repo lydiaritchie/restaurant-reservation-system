@@ -1,16 +1,6 @@
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const service = require("./reservations.service");
 
-/**
- * List handler for reservation resources
- */
-async function list(req, res) {
-  const date = req.query.date;
-  const allReservations = await service.listReservations(date);
-  res.json({
-    data: allReservations,
-  });
-}
 
 async function validateInputs(req, res, next) {
   const inputs = req.body.data;
@@ -93,6 +83,36 @@ async function create(req, res, next) {
   }
 }
 
+/**
+ * Gets the reservation that matches the reservation id passed in.
+ */
+async function read(req, res, next){
+  console.log("inside of read in the controller");
+  const id = req.params.reservation_id;
+  console.log("id:", id);
+  try{
+    const reservation = await service.getReservation(id);
+    if(!reservation){
+      return next({status:404, message: `Reservation with id ${id} not found`});
+    }
+    res.status(200).json({data: reservation});
+  } catch (error) {
+    next({status: 400, message: `Could not get reservation with id ${id}`});
+  }
+  
+}
+
+/**
+ * List handler for reservation resources
+ */
+async function list(req, res) {
+  const date = req.query.date;
+  const allReservations = await service.listReservations(date);
+  res.json({
+    data: allReservations,
+  });
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
@@ -101,4 +121,5 @@ module.exports = {
     asyncErrorBoundary(validateTime),
     asyncErrorBoundary(create),
   ],
+  read: [asyncErrorBoundary(read)],
 };
