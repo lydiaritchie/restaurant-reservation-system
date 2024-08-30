@@ -20,7 +20,12 @@ async function listTables(){
     })
 }
 
+async function setTableReservation(table_id, reservation_id){
+    return true;
+}
+
 module.exports ={
     createTable,
     listTables,
+    setTableReservation,
 }

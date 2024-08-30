@@ -66,7 +66,7 @@ function Dashboard({ date }) {
             
             <div className="mt-1 font-weight-bold">{r.reservation_time}</div>
             {r.people > 1 ? <>{r.people} people</> : <>{r.people} person</>}
-            <div className="fs-5">{date}</div>
+            <div className="fs-5">{formatDate(date)}</div>
             <div className="font-italic">{r.mobile_number}</div>
           </div>
 

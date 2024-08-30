@@ -9,10 +9,10 @@ function SeatReservation() {
   const history = useHistory();
   const [reservation, setReservation] = useState({});
   const [tables, setTables] = useState([]);
-  //option is an object {table_id: table_capactiy}
-  const [option, setOption] = useState({});
+  const [tableId, setTableId] = useState(null);
   const [tablesError, setTablesError] = useState(null);
   const [reservationError, setReservationError] = useState(null);
+  const [selectionError, setSelectionError] = useState(null);
 
   //useEffect to get the current reservation
   useEffect(() => {
@@ -20,7 +20,6 @@ function SeatReservation() {
     setReservationError(null);
     getReservation(reservation_id, abortController.signal)
       .then((reservationData) => {
-        console.log(reservationData);
         setReservation(reservationData[0]);
       })
       .catch(setReservationError);
@@ -52,10 +51,12 @@ function SeatReservation() {
     //check if capactiy can handle
     const capacity =
       target.options[target.selectedIndex].getAttribute("data-capacity");
-    console.log(capacity);
-    if (reservation.capacity > capacity) {
+    if (target.value !== "select" && reservation.people > capacity) {
+      setTablesError("Reservation capacity is greater table capacity.");
+    } else {
+      setTablesError(null);
     }
-    setOption(target.value);
+    setTableId(target.value);
   }
 
   //handle submit
@@ -63,13 +64,22 @@ function SeatReservation() {
   //pass in the table_id and reservation_id
   async function handleSubmit(event) {
     event.preventDefault();
-    console.log("submit");
-    console.log("option:", option);
-    try {
-      await setTableReservation([option, reservation.restaurant_id]);
-    } catch (error) {
-      console.log(error);
-      ErrorAlert(error);
+    //haven't selected a table yet
+    if(tableId === "select" || tableId === null || tableId === undefined){
+      setSelectionError("Please select a table");
+    } else {
+      setSelectionError(null);
+    }
+    if (!tablesError === null || !reservationError === null || !selectionError === null) {
+      try {
+        await setTableReservation({
+          table_id: tableId,
+          reservation_id: reservation.reservation_id,
+        });
+      } catch (error) {
+        console.log(error);
+        ErrorAlert(error);
+      }
     }
   }
 
@@ -107,7 +117,7 @@ function SeatReservation() {
 
       <form onSubmit={handleSubmit}>
         <select name="table_id" onChange={handleChange} className="my-3">
-          <option value="">-- Select an Option --</option>
+          <option value="select">-- Select an Option --</option>
           {tableOptions}
         </select>
 
@@ -126,7 +136,19 @@ function SeatReservation() {
       </form>
 
       {reservationError ? (
-        <div className="alert alert-danger">reservationError</div>
+        <div className="alert alert-danger">
+          Reservations: {reservationError}
+        </div>
+      ) : (
+        <></>
+      )}
+      {tablesError ? (
+        <div className="mt-3 alert alert-danger">Tables: {tablesError}</div>
+      ) : (
+        <></>
+      )}
+      {selectionError ? (
+        <div className="mt-3 alert alert-danger">{selectionError}</div>
       ) : (
         <></>
       )}
