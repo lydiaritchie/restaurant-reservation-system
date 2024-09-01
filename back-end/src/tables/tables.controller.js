@@ -19,23 +19,22 @@ async function list(req, res, next) {
   }
 }
 
-async function setTableReservation(req, res, next) {
-    console.log("setTableReservation");
-    const reservation_id = req.body;
-    console.log(reservation_id);
+async function setReservation(req, res, next) {
+    const reservation_id = req.body.data;
+    console.log("reservation_id:", reservation_id);
     const table_id = req.params.table_id;
     console.log(table_id);
   try {
-    await setTableReservation(table_id, reservation_id);
-    res.status(200).json({ data: "Set" });
+    const updatedTable = await service.setTableReservation(table_id, reservation_id);
+    res.status(200).json({ data: 7 });
   } catch (error) {
     console.log(error);
-    next({status: 400, message: "Could not update table"});
+    next({status: 400, message: "Could not update the table"});
   }
 }
 
 module.exports = {
   create: [asyncErrorBoundary(create)],
   list: [asyncErrorBoundary(list)],
-  setTableReservation: [asyncErrorBoundary(setTableReservation)],
+  setTableReservation: [asyncErrorBoundary(setReservation)],
 };

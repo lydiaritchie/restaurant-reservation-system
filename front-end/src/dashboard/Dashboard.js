@@ -94,7 +94,9 @@ function Dashboard({ date }) {
         <div className="d-flex row">
           <div className="col">Table: {t.table_name}</div>
           <div className="col">Capacity: {t.capacity}</div>
-          <div className="col" data-table-id-status={t.table_id}>Free</div>
+          <div className="col" data-table-id-status={t.table_id}>
+            {t.reservation_id !=null ? (<>Occupied</>): (<>Free</>)}
+          </div>
         </div>
       </li>
     );
@@ -160,7 +162,7 @@ function Dashboard({ date }) {
             </ul>
 
             <ul id="tables" className="list-group list ml-3 flex-grow-1">
-              <h4>Tables</h4>
+              <h4>Tables:</h4>
               {tableCards}
             </ul>
           </div>

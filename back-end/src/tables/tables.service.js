@@ -1,3 +1,4 @@
+const P = require("pino");
 const knex = require("../db/connection");
 
 const tableName = "tables";
@@ -20,8 +21,15 @@ async function listTables(){
     })
 }
 
-async function setTableReservation(table_id, reservation_id){
-    return true;
+async function setTableReservation(table_id, new_reservation_id){
+ return await knex(tableName)
+        .where({table_id})
+        .update({reservation_id: new_reservation_id})
+        .returning("*")
+        .catch((error) => {
+            console.log(`Could not update table ${table_id}`)
+            throw error;
+        })
 }
 
 module.exports ={

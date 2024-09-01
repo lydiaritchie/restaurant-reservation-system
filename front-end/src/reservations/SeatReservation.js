@@ -70,17 +70,16 @@ function SeatReservation() {
     } else {
       setSelectionError(null);
     }
-    if (!tablesError === null || !reservationError === null || !selectionError === null) {
+    //if (tablesError != null || reservationError != null || selectionError != null) {
       try {
-        await setTableReservation({
-          table_id: tableId,
-          reservation_id: reservation.reservation_id,
-        });
+        await setTableReservation(tableId, reservation.reservation_id);
+        console.log("setReservation");
+        history.push(`/dashboard`);
       } catch (error) {
         console.log(error);
         ErrorAlert(error);
       }
-    }
+    //}
   }
 
   return (
