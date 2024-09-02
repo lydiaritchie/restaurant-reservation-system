@@ -5,40 +5,42 @@ const reservationService = require("../reservations/reservations.service");
 async function validatePostInputs(req, res, next) {
   const data = req.body.data;
 
-  if(data === undefined || data ===  null){
-    return next({status:400, message: "Data is missing"});
+  if (data === undefined || data === null) {
+    return next({ status: 400, message: "Data is missing" });
   }
 
   const table_name = data.table_name;
 
-  if(table_name === undefined || table_name === null){
-    return next({status: 400, message: "table_name is missing"});
+  if (table_name === undefined || table_name === null) {
+    return next({ status: 400, message: "table_name is missing" });
   }
 
-  if(table_name === ""){
-    return next({status: 400, message: "table_name is empty"});
+  if (table_name === "") {
+    return next({ status: 400, message: "table_name is empty" });
   }
 
-  if(table_name.length === 1){
-    return next({status:400, message: "table_name must be at least 2 characters"});
+  if (table_name.length === 1) {
+    return next({
+      status: 400,
+      message: "table_name must be at least 2 characters",
+    });
   }
-
   const capacity = data.capacity;
 
-  if(capacity === undefined || capacity === null){
-    return next({status: 400, message: "capacity is missing"});
+  if (capacity === undefined || capacity === null) {
+    return next({ status: 400, message: "capacity is missing" });
   }
 
-  if(capacity === ""){
-    return next({status: 400, message: "capacity is empty"});
+  if (capacity === "") {
+    return next({ status: 400, message: "capacity is empty" });
   }
 
   if (!Number.isInteger(capacity)) {
-    return next({ status: 400, message: "people is not a number" });
+    return next({ status: 400, message: "capacity is not a number" });
   }
 
-  if(capacity === 0){
-    return next({status: 400, message: "capacity cannot be 0"});
+  if (capacity === 0) {
+    return next({ status: 400, message: "capacity cannot be 0" });
   }
 
   next();
@@ -69,8 +71,23 @@ async function list(req, res, next) {
  */
 
 async function validateSetReservation(req, res, next) {
-  const { reservation_id } = req.body.data;
+  const data = req.body.data;
+
+  if (data === undefined || data === null) {
+    return next({ status: 400, message: "data is missing" });
+  }
+
+  const { reservation_id } = data;
   const table_id = req.params.table_id;
+
+  //check if values exsist
+  if (reservation_id === undefined || reservation_id === null) {
+    return next({ status: 400, message: "reservation_id is missing" });
+  }
+
+  if (table_id === undefined || table_id === null) {
+    return next({ status: 400, message: "table_id is missing" });
+  }
 
   // Attach the values to the req object
   req.reservation_id = reservation_id;
@@ -90,17 +107,28 @@ async function validateSetReservation(req, res, next) {
     throw error;
   }
 
-  //if table is occupied
-  if (currentTable.reservation_id != null) {
-    next({ status: 400, message: "This table is already occupied" });
+  //check if currentReservation exists
+  if (currentReservation === undefined) {
+    return next({
+      status: 404,
+      message: `reservation ${reservation_id} does not exist`,
+    });
   }
+
   //if table capacity is less than currentReservation.people
+  console.log("capacity:", currentTable.capacity);
+  console.log("currentReservation:", currentReservation);
   if (currentTable.capacity < currentReservation.people) {
     console.log("This table doesn't have the capacity");
-    next({
+    return next({
       status: 400,
-      message: "This table doesn't have the capacity for this reservation",
+      message: "table doesn't have the capacity",
     });
+  }
+
+  //if table is occupied
+  if (currentTable.reservation_id != null) {
+    return next({ status: 400, message: "This table is already occupied" });
   }
 
   next();

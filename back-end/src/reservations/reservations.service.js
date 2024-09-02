@@ -13,6 +13,7 @@ async function getReservation(reservation_id){
   return knex(tableName)
     .select("*")
     .where({reservation_id})
+    .then((createdRecords) => createdRecords[0])
     .catch((error) => {
       console.log("Error retrieving reservation:", error.message);
       throw error;

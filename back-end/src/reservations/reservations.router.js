@@ -10,5 +10,7 @@ const controller = require("./reservations.controller");
 
 router.route("/:reservation_id/seat").get(controller.read).all(notFound);
 
+router.route("/:reservation_id").get(controller.read).all(notFound);
+
 router.route("/").get(controller.list).post(controller.create).all(notFound);
 module.exports = router;
