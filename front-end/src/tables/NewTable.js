@@ -11,7 +11,7 @@ function NewTable() {
 
   const initalFormState = {
     table_name: "",
-    capacity: 1,
+    capacity: 0,
   }
 
   const [formData, setFormData] = useState({...initalFormState});
@@ -31,7 +31,7 @@ function NewTable() {
       table_name: formData.table_name,
       capacity: Number(formData.capacity),
     };
-    console.log(newTable);
+
     try{
         //saves the table to the database 
         await createTable(newTable);

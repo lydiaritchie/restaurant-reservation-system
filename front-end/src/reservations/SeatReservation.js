@@ -9,23 +9,35 @@ function SeatReservation() {
   const history = useHistory();
   const [reservation, setReservation] = useState({});
   const [tables, setTables] = useState([]);
-  const [tableId, setTableId] = useState(null);
+  const [selectedTableId, setSelectedTableId] = useState(null);
   const [tablesError, setTablesError] = useState(null);
   const [reservationError, setReservationError] = useState(null);
   const [selectionError, setSelectionError] = useState(null);
 
-  //useEffect to get the current reservation
-  useEffect(() => {
-    const abortController = new AbortController();
-    setReservationError(null);
-    getReservation(reservation_id, abortController.signal)
-      .then((reservationData) => {
-        setReservation(reservationData[0]);
-      })
-      .catch(setReservationError);
-    listTables(abortController.signal).then(setTables).catch(setTablesError);
-    return () => abortController.abort();
-  }, [reservation_id]);
+//useEffect to get the current reservation
+useEffect(() => {
+  const abortController = new AbortController();
+
+  const fetchReservationAndTables = async () => {
+    try {
+      setReservationError(null);
+      const reservationData = await getReservation(reservation_id, abortController.signal);
+      setReservation(reservationData[0]);
+
+      const tablesData = await listTables(abortController.signal);
+      setTables(tablesData);
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        setReservationError(error);
+        setTablesError(error);
+      }
+    }
+  };
+
+  fetchReservationAndTables();
+
+  return () => abortController.abort();
+}, [reservation_id]);
 
   //format the date for displaying on the top of the page
   function formatDate(dateString) {
@@ -39,47 +51,75 @@ function SeatReservation() {
 
   //Map tables into options
   const tableOptions = tables.map((t) => {
+    let status;
+    if (t.reservation_id) {
+      status = "Occupied";
+    } else {
+      status = "Free";
+    }
     return (
       <option key={t.table_id} value={t.table_id} data-capacity={t.capacity}>
-        Table: {t.table_name} Capacity: {t.capacity}
+        {t.table_name} : {t.capacity} - {status}
       </option>
     );
   });
 
   //handle change
   async function handleChange({ target }) {
-    //check if capactiy can handle
+    //check if the table is occupied or free
+    const currentTable = tables.find((table) => {
+      console.log(`${table.table_id} == ${target.value}`);
+      return Number(table.table_id) === Number(target.value);
+    });
+    console.log(currentTable);
+
     const capacity =
       target.options[target.selectedIndex].getAttribute("data-capacity");
-    if (target.value !== "select" && reservation.people > capacity) {
+
+    if (currentTable.reservation_id != null) {
+      setTablesError("This table is already occupied");
+    }
+    //check if there are any errors, if they haven't selected anything or if the capacity is too large
+    else if (
+      tablesError != null &&
+      target.value !== "select" &&
+      reservation.people > capacity
+    ) {
       setTablesError("Reservation capacity is greater table capacity.");
     } else {
       setTablesError(null);
     }
-    setTableId(target.value);
+
+    setSelectedTableId(target.value);
   }
 
-  //handle submit
-  //set the forigen key to reservation_id
-  //pass in the table_id and reservation_id
   async function handleSubmit(event) {
     event.preventDefault();
     //haven't selected a table yet
-    if(tableId === "select" || tableId === null || tableId === undefined){
+    if (
+      selectedTableId === "select" ||
+      selectedTableId === null ||
+      selectedTableId === undefined
+    ) {
       setSelectionError("Please select a table");
     } else {
       setSelectionError(null);
     }
-    //if (tablesError != null || reservationError != null || selectionError != null) {
+
+    if (
+      tablesError === null ||
+      reservationError === null ||
+      selectionError === null
+    ) {
       try {
-        await setTableReservation(tableId, reservation.reservation_id);
+        await setTableReservation(selectedTableId, reservation.reservation_id);
         console.log("setReservation");
-        history.push(`/dashboard`);
+        await history.push(`/dashboard`);
       } catch (error) {
         console.log(error);
         ErrorAlert(error);
       }
-    //}
+    }
   }
 
   return (
