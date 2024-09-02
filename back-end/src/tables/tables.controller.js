@@ -116,8 +116,6 @@ async function validateSetReservation(req, res, next) {
   }
 
   //if table capacity is less than currentReservation.people
-  console.log("capacity:", currentTable.capacity);
-  console.log("currentReservation:", currentReservation);
   if (currentTable.capacity < currentReservation.people) {
     console.log("This table doesn't have the capacity");
     return next({

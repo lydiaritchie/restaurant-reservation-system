@@ -40,5 +40,5 @@ module.exports = {
   createTable,
   listTables,
   setTableReservation,
-  read
+  read,
 };
