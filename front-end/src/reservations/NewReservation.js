@@ -41,7 +41,7 @@ function NewReservations() {
   function validateTime(time) {
     if (!error) {
       if (time < "10:30" || time > "21:30") {
-        setError("Reservation between 10:30 am and 9:30 pm");
+        setError("Reservation must be between 10:30 am and 9:30 pm");
       } else {
         setError(false);
       }

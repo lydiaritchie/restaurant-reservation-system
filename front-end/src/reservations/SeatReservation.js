@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
-import { getReservation, listTables } from "../utils/api";
-import { setTableReservation } from "../utils/api";
+import { getReservation, listTables, setTableReservation } from "../utils/api";
+
 
 function SeatReservation() {
   const { reservation_id } = useParams();
@@ -14,30 +14,34 @@ function SeatReservation() {
   const [reservationError, setReservationError] = useState(null);
   const [selectionError, setSelectionError] = useState(null);
 
-//useEffect to get the current reservation
-useEffect(() => {
-  const abortController = new AbortController();
+  //useEffect to get the current reservation
+  useEffect(() => {
+    const abortController = new AbortController();
 
-  const fetchReservationAndTables = async () => {
-    try {
-      setReservationError(null);
-      const reservationData = await getReservation(reservation_id, abortController.signal);
-      setReservation(reservationData[0]);
+    const fetchReservationAndTables = async () => {
+      try {
+        setReservationError(null);
+        const reservationData = await getReservation(
+          reservation_id,
+          abortController.signal
+        );
+        
+        setReservation(reservationData);
 
-      const tablesData = await listTables(abortController.signal);
-      setTables(tablesData);
-    } catch (error) {
-      if (error.name !== "AbortError") {
-        setReservationError(error);
-        setTablesError(error);
+        const tablesData = await listTables(abortController.signal);
+        setTables(tablesData);
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          setReservationError(error);
+          setTablesError(error);
+        }
       }
-    }
-  };
+    };
 
-  fetchReservationAndTables();
+    fetchReservationAndTables();
 
-  return () => abortController.abort();
-}, [reservation_id]);
+    return () => abortController.abort();
+  }, [reservation_id]);
 
   //format the date for displaying on the top of the page
   function formatDate(dateString) {
@@ -51,15 +55,9 @@ useEffect(() => {
 
   //Map tables into options
   const tableOptions = tables.map((t) => {
-    let status;
-    if (t.reservation_id) {
-      status = "Occupied";
-    } else {
-      status = "Free";
-    }
     return (
       <option key={t.table_id} value={t.table_id} data-capacity={t.capacity}>
-        {t.table_name} : {t.capacity} - {status}
+        {t.table_name} - {t.capacity}
       </option>
     );
   });
@@ -73,8 +71,9 @@ useEffect(() => {
     });
     console.log(currentTable);
 
-    const capacity =
-      target.options[target.selectedIndex].getAttribute("data-capacity");
+    const capacity = await target.options[target.selectedIndex].getAttribute(
+      "data-capacity"
+    );
 
     if (currentTable.reservation_id != null) {
       setTablesError("This table is already occupied");
@@ -107,13 +106,13 @@ useEffect(() => {
     }
 
     if (
-      tablesError === null ||
-      reservationError === null ||
+      tablesError === null &&
+      reservationError === null &&
       selectionError === null
     ) {
       try {
-        await setTableReservation(selectedTableId, reservation.reservation_id);
-        console.log("setReservation");
+        const reservationId = reservation.reservation_id;
+        await setTableReservation(selectedTableId, reservationId);
         await history.push(`/dashboard`);
       } catch (error) {
         console.log(error);
@@ -142,10 +141,11 @@ useEffect(() => {
             ) : (
               <>{reservation.people} person</>
             )}
-            <div className="font-italic">{reservation.mobile_number}</div>
+
             <div className="fs-5">
               {formatDate(reservation.reservation_date)}
             </div>
+            <div className="font-italic">{reservation.mobile_number}</div>
           </div>
 
           <div className="d-flex col-3 flex-column id">

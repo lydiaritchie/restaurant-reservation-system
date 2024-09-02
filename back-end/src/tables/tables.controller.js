@@ -77,7 +77,7 @@ async function validateSetReservation(req, res, next) {
     return next({ status: 400, message: "data is missing" });
   }
 
-  const { reservation_id } = data;
+  const {reservation_id}  = data;
   const table_id = req.params.table_id;
 
   //check if values exsist
@@ -117,7 +117,6 @@ async function validateSetReservation(req, res, next) {
 
   //if table capacity is less than currentReservation.people
   if (currentTable.capacity < currentReservation.people) {
-    console.log("This table doesn't have the capacity");
     return next({
       status: 400,
       message: "table doesn't have the capacity",
