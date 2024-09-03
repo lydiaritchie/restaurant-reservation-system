@@ -13,6 +13,7 @@ function SeatReservation() {
   const [tablesError, setTablesError] = useState(null);
   const [reservationError, setReservationError] = useState(null);
   const [selectionError, setSelectionError] = useState(null);
+  const [commonError, setCommonError] = useState(null);
 
   //useEffect to get the current reservation
   useEffect(() => {
@@ -116,7 +117,7 @@ function SeatReservation() {
         await history.push(`/dashboard`);
       } catch (error) {
         console.log(error);
-        ErrorAlert(error);
+        setCommonError(error);
       }
     }
   }
@@ -191,6 +192,7 @@ function SeatReservation() {
       ) : (
         <></>
       )}
+      <ErrorAlert error={commonError} />
     </main>
   );
 }

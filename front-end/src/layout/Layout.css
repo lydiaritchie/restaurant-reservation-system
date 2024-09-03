@@ -68,9 +68,7 @@ input {
 }
 
 .purple {
-  background-color: rgb(237, 210, 241);
-  border-radius: 2px;
-  align-items: baseline;
+  color: rgb(107, 100, 237);
 }
 
 .blue {

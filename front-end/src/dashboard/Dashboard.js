@@ -53,11 +53,15 @@ function Dashboard({ date }) {
     history.push(`${location.pathname}?date=${dateString}`);
   }
 
+  function handleFinish(event) {
+    console.log("Finished!");
+  }
+
   const reservationCards = reservations.map((r) => {
     const date = next(r.reservation_date);
     return (
       <li key={r.reservation_id} className="shadow-sm list-group-item">
-        <div className="d-flex row justify-content-between reservation-cards">
+        <div className="d-flex row justify-content-between reservation-cards text-wrap">
           <div className="col-9">
             <h5 className="">
               {r.first_name} {r.last_name}
@@ -88,36 +92,37 @@ function Dashboard({ date }) {
   const tableCards = tables.map((t) => {
     return (
       <li key={t.table_id} className="shadow-sm list-group-item">
-        <div className="d-flex justify-content-between reservation-cards">
-          <div className="">
+        <div className="d-flex row g-0 justify-content-between reservation-cards text-wrap">
+
+          <div className="col-5">
             <div className="mb-1">Table: {t.table_name}</div>
             <div className="">Capacity: {t.capacity}</div>
           </div>
 
-          <div
-            className="d-flex flex-column id status-text"ß
-            data-table-id-status={t.table_id}
-          >
-            {t.reservation_id != null ? <div>Occupied</div> : <div>Free</div>}
+          <div className="col-4 px-1 align-self-center justify-content-center">
+            {t.reservation_id != null ? (
+              <div className="align-self-center text-muted">Occupied</div>
+            ) : (
+              <div className="font-weight-bold align-self-center">Free</div>
+            )}
+          </div>
+
+          <div className="col-3 d-flex flex-column" data-table-id-status={t.table_id}>
             {t.reservation_id ? (
-              <div className="">
+              <div className="justify-content-center d-flex">
                 <button
-                  className="btn submit-button mt-1"
+                  className="btn submit-button align-self-center"
                   data-table-id-finish={t.table_id}
+                  onClick={handleFinish}
                 >
                   Finish
                 </button>
               </div>
             ) : (
-              <button
-                type="button"
-                className="btn submit-button mt-1"
-                data-table-id-finish={t.table_id}
-              >
-                Finish
-              </button>
+              <div className=""></div>
             )}
           </div>
+
         </div>
       </li>
     );
