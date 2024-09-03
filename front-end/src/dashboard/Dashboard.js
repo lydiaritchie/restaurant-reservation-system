@@ -57,14 +57,15 @@ function Dashboard({ date }) {
     const date = next(r.reservation_date);
     return (
       <li key={r.reservation_id} className="shadow-sm list-group-item">
-        <div className="d-flex row justify-content-between align-items reservation-cards">
-
+        <div className="d-flex row justify-content-between reservation-cards">
           <div className="col-9">
             <h5 className="">
               {r.first_name} {r.last_name}
             </h5>
-            
-            <div className="mt-1 font-weight-bold">{r.reservation_time.slice(0, 5)}</div>
+
+            <div className="mt-1 font-weight-bold">
+              {r.reservation_time.slice(0, 5)}
+            </div>
             {r.people > 1 ? <>{r.people} people</> : <>{r.people} person</>}
             <div className="fs-5">{formatDate(date)}</div>
             <div className="font-italic">{r.mobile_number}</div>
@@ -79,7 +80,6 @@ function Dashboard({ date }) {
               Seat
             </Link>
           </div>
-
         </div>
       </li>
     );
@@ -87,15 +87,36 @@ function Dashboard({ date }) {
 
   const tableCards = tables.map((t) => {
     return (
-      <li
-        key={t.table_id}
-        className="shadow-sm list-group-item reservation-cards"
-      >
-        <div className="d-flex row">
-          <div className="col">Table: {t.table_name}</div>
-          <div className="col">Capacity: {t.capacity}</div>
-          <div className="col" data-table-id-status={t.table_id}>
-            {t.reservation_id !=null ? (<>Occupied</>): (<>Free</>)}
+      <li key={t.table_id} className="shadow-sm list-group-item">
+        <div className="d-flex justify-content-between reservation-cards">
+          <div className="">
+            <div className="mb-1">Table: {t.table_name}</div>
+            <div className="">Capacity: {t.capacity}</div>
+          </div>
+
+          <div
+            className="d-flex flex-column id status-text"ß
+            data-table-id-status={t.table_id}
+          >
+            {t.reservation_id != null ? <div>Occupied</div> : <div>Free</div>}
+            {t.reservation_id ? (
+              <div className="">
+                <button
+                  className="btn submit-button mt-1"
+                  data-table-id-finish={t.table_id}
+                >
+                  Finish
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className="btn submit-button mt-1"
+                data-table-id-finish={t.table_id}
+              >
+                Finish
+              </button>
+            )}
           </div>
         </div>
       </li>
