@@ -54,7 +54,9 @@ function Dashboard({ date }) {
   }
 
   function handleFinish(event) {
-    console.log("Finished!");
+    if(window.confirm("Is this table ready to seat new guests? This cannot be undone.")){
+      console.log("finished");
+    }
   }
 
   const reservationCards = reservations.map((r) => {
