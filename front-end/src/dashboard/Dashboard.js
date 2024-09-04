@@ -59,7 +59,7 @@ function Dashboard({ date }) {
       console.log("finished");
       try{
         await deleteTableReservation(table_id);
-        loadDashboard();
+        await loadDashboard();
       } catch (error) {
         console.log(error);
         setSeatError(error);
@@ -111,13 +111,13 @@ function Dashboard({ date }) {
 
           <div className="col-4 px-1 align-self-center justify-content-center">
             {table.reservation_id != null ? (
-              <div className="align-self-center text-muted">Occupied</div>
+              <div className="align-self-center text-muted" data-table-id-status={table.table_id}>Occupied</div>
             ) : (
-              <div className="font-weight-bold align-self-center">Free</div>
+              <div className="font-weight-bold align-self-center" data-table-id-status={table.table_id}>Free</div>
             )}
           </div>
 
-          <div className="col-3 d-flex flex-column" data-table-id-status={table.table_id}>
+          <div className="col-3 d-flex flex-column">
             {table.reservation_id ? (
               <div className="justify-content-center d-flex">
                 <button
