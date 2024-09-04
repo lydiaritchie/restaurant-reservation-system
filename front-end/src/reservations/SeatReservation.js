@@ -4,7 +4,6 @@ import ErrorAlert from "../layout/ErrorAlert";
 import { getReservation, listTables, setTableReservation } from "../utils/api";
 import { next } from "../utils/date-time";
 
-
 function SeatReservation() {
   const { reservation_id } = useParams();
   const history = useHistory();
@@ -27,14 +26,14 @@ function SeatReservation() {
           reservation_id,
           abortController.signal
         );
-        
+
         setReservation(reservationData);
 
         const tablesData = await listTables(abortController.signal);
         setTables(tablesData);
       } catch (error) {
         if (error.name !== "AbortError") {
-          setReservationError(error);
+          setReservationError(error.message);
           setTablesError(error);
         }
       }
@@ -66,6 +65,14 @@ function SeatReservation() {
 
   //handle change
   async function handleChange({ target }) {
+    if (target.value === "select") {
+      return setSelectionError("Please select a table");
+    } else {
+      setSelectionError(null);
+      setTablesError(null);
+      setReservationError(null);
+    }
+
     //check if the table is occupied or free
     const currentTable = tables.find((table) => {
       console.log(`${table.table_id} == ${target.value}`);
@@ -82,7 +89,7 @@ function SeatReservation() {
     }
     //check if there are any errors, if they haven't selected anything or if the capacity is too large
     else if (
-      tablesError != null &&
+      
       target.value !== "select" &&
       reservation.people > capacity
     ) {
@@ -102,7 +109,7 @@ function SeatReservation() {
       selectedTableId === null ||
       selectedTableId === undefined
     ) {
-      setSelectionError("Please select a table");
+      return setSelectionError("Please select a table");
     } else {
       setSelectionError(null);
     }

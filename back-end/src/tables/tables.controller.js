@@ -148,6 +148,27 @@ async function setReservation(req, res, next) {
 
 async function deleteTableReservation(req, res, next){
   const table_id = req.params.table_id;
+  console.log("inside delete");
+
+  try{
+    const table = await service.read(table_id);
+    console.log(table);
+    res.locals.table = table;
+    console.log(res.locals.table);
+  } catch (error) {
+    console.log(error);
+  }
+
+  const table = res.locals.table;
+  console.log("table:", table);
+
+  if(!table.table_id) {
+    next({ status: 404, message: `table ${table_id} does not exist`});
+  }
+
+  if(table.reservation_id === null){
+    next({status: 400, messsage: `table ${table_id} is not occupied`});
+  }
 
   try{
     await service.deleteTableReservation(table_id);
