@@ -134,12 +134,38 @@ export async function setTableReservation(table_id, reservation_id, signal){
   return await fetchJson(url, options);
 }
 
+/**
+ * Delete a reservation from a table
+ * @param {*} table_id 
+ * @param {*} reservation_id 
+ * @param {*} signal 
+ * @returns 
+ */
+
 export async function deleteTableReservation(table_id, reservation_id, signal){
   const url = `${API_BASE_URL}/tables/${table_id}/seat`;
   const options = {
     method: "DELETE",
     headers,
     body: JSON.stringify({data: {reservation_id}}),
+    signal,
+  };
+  return await fetchJson(url, options);
+}
+
+/**
+ * Set the status of a reservation to "booked", "seated", or "finished"
+ * @param {*} status 
+ * @param {*} reservation_id 
+ * @param {*} signal 
+ * @returns 
+ */
+export async function setStatus(status, reservation_id, signal){
+  const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
+  const options ={
+    method: "PUT",
+    headers,
+    body: JSON.stringify({data: {status: status}}),
     signal,
   };
   return await fetchJson(url, options);

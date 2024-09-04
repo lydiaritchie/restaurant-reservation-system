@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
-import { getReservation, listTables, setTableReservation } from "../utils/api";
+import { getReservation, listTables, setTableReservation, setStatus } from "../utils/api";
 import { next } from "../utils/date-time";
 
 function SeatReservation() {
@@ -124,6 +124,8 @@ function SeatReservation() {
         const date = next(reservation.reservation_date.slice(0, 10));
         const reservationDate = date;
         await setTableReservation(selectedTableId, reservationId);
+        //update status here
+        await setStatus("seated", reservationId);
         history.push(`/dashboard/?date=${reservationDate}`);
       } catch (error) {
         console.log(error);

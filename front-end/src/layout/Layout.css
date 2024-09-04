@@ -80,6 +80,11 @@ input {
   align-items: end;
 }
 
+.booked {
+  color:  rgb(107, 100, 237);
+  border-color:  rgb(107, 100, 237);
+}
+
 @media (max-width:310px){
   .dash-title{
     display:flex;

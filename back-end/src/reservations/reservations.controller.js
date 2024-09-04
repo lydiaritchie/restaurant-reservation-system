@@ -1,7 +1,6 @@
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const service = require("./reservations.service");
 
-
 async function validateInputs(req, res, next) {
   const inputs = req.body.data;
 
@@ -50,29 +49,31 @@ async function validateInputs(req, res, next) {
 }
 
 //validate date to not be in the past or a Tuesday
-async function validateDate(req, res, next){
+async function validateDate(req, res, next) {
   const date = req.body.data.reservation_date;
   const time = req.body.data.reservation_time;
   const dateTimeString = date + "T" + time;
   const dateObj = new Date(dateTimeString);
-  const today = new Date().toISOString().split('T')[0];
-  if (date < today){
-    return next({status: 400, message: "Please book in the future"});
+  const today = new Date().toISOString().split("T")[0];
+  if (date < today) {
+    return next({ status: 400, message: "Please book in the future" });
+  } else if (dateObj.getDay() === 2) {
+    return next({ status: 400, message: "Restaurant in closed" });
   }
-  else if(dateObj.getDay() === 2){
-    return next({status:400, message: "Restaurant in closed"})
-  }
-  
+
   next();
 }
 
-  async function validateTime(req, res, next){
-    const time = req.body.data.reservation_time;
-    if(time < "10:30" || time > "21:30"){
-      return next({status: 400, message: "Please book between 10:30 am and 9:30 pm"});
-    }
-    next();
+async function validateTime(req, res, next) {
+  const time = req.body.data.reservation_time;
+  if (time < "10:30" || time > "21:30") {
+    return next({
+      status: 400,
+      message: "Please book between 10:30 am and 9:30 pm",
+    });
   }
+  next();
+}
 
 async function create(req, res, next) {
   try {
@@ -86,18 +87,20 @@ async function create(req, res, next) {
 /**
  * Gets the reservation that matches the reservation id passed in.
  */
-async function read(req, res, next){
+async function read(req, res, next) {
   const id = req.params.reservation_id;
-  try{
+  try {
     const reservation = await service.getReservation(id);
-    if(!reservation){
-      return next({status:404, message: `Reservation with id ${id} not found`});
+    if (!reservation) {
+      return next({
+        status: 404,
+        message: `Reservation with id ${id} not found`,
+      });
     }
-    res.status(200).json({data: reservation});
+    res.status(200).json({ data: reservation });
   } catch (error) {
-    next({status: 400, message: `Could not get reservation with id ${id}`});
+    next({ status: 400, message: `Could not get reservation with id ${id}` });
   }
-  
 }
 
 /**
@@ -111,6 +114,28 @@ async function list(req, res) {
   });
 }
 
+async function update(req, res, next) {
+  const reservation_id = req.params.reservation_id;
+  const { status } = req.body.data;
+  console.log("reservation_id:", reservation_id);
+  console.log("status:", status);
+
+  if (status === "seated" || status === "booked" || status === "finished") {
+    try {
+      await service.updateStatus(status, reservation_id);
+      res.status(200).json({data: status});
+    } catch (error) {
+      console.log(error);
+      next({
+        status: 400,
+        message: `Could not update status: ${status} on reservation ${reservation_id}`,
+      });
+    }
+  } else {
+    next({status: 400, message: `${status} is not a valid status`});
+  }
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
@@ -120,4 +145,5 @@ module.exports = {
     asyncErrorBoundary(create),
   ],
   read: [asyncErrorBoundary(read)],
+  update: [asyncErrorBoundary(update)],
 };

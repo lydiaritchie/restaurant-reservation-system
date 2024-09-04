@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { listReservations, listTables, deleteTableReservation } from "../utils/api";
+import {
+  listReservations,
+  listTables,
+  deleteTableReservation,
+  setStatus,
+} from "../utils/api";
 import { useLocation, useHistory, Link } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import { today, previous, next } from "../utils/date-time";
@@ -54,11 +59,17 @@ function Dashboard({ date }) {
     history.push(`${location.pathname}?date=${dateString}`);
   }
 
-  async function handleFinish(table_id) {
-    if(window.confirm("Is this table ready to seat new guests? This cannot be undone.")){
+  async function handleFinish(table_id, reservation_id) {
+
+    if (
+      window.confirm(
+        "Is this table ready to seat new guests? This cannot be undone."
+      )
+    ) {
       console.log("finished");
-      try{
+      try {
         await deleteTableReservation(table_id);
+        await setStatus("finished", reservation_id);
         await loadDashboard();
       } catch (error) {
         console.log(error);
@@ -67,29 +78,38 @@ function Dashboard({ date }) {
     }
   }
 
-  const reservationCards = reservations.map((r) => {
-    const date = next(r.reservation_date);
+  const reservationCards = reservations.map((reservation) => {
+    const date = next(reservation.reservation_date);
     return (
-      <li key={r.reservation_id} className="shadow-sm list-group-item">
+      <li key={reservation.reservation_id} className="shadow-sm list-group-item">
         <div className="d-flex row justify-content-between reservation-cards text-wrap">
           <div className="col-9">
-            <h5 className="">
-              {r.first_name} {r.last_name}
-            </h5>
+            <div className="d-flex">
+              <h5 className="mr-3">
+                {reservation.first_name} {reservation.last_name}
+              </h5>
+
+              <div
+                className="mb-1 align-self-center py-0 px-1 font-italic booked"
+                data-reservation-id-status={reservation.reservation_id}
+              >
+                {reservation.status}
+              </div>
+            </div>
 
             <div className="mt-1 font-weight-bold">
-              {r.reservation_time.slice(0, 5)}
+              {reservation.reservation_time.slice(0, 5)}
             </div>
-            {r.people > 1 ? <>{r.people} people</> : <>{r.people} person</>}
+            {reservation.people > 1 ? <>{reservation.people} people</> : <>{reservation.people} person</>}
             <div className="fs-5">{formatDate(date)}</div>
-            <div className="font-italic">{r.mobile_number}</div>
+            <div className="font-italic">{reservation.mobile_number}</div>
           </div>
 
           <div className="d-flex col-3 flex-column id">
-            <div className="">ID: {r.reservation_id}</div>
+            <div className="">ID: {reservation.reservation_id}</div>
             <Link
               className="btn submit-button mt-auto"
-              to={`/reservations/${r.reservation_id}/seat`}
+              to={`/reservations/${reservation.reservation_id}/seat`}
             >
               Seat
             </Link>
@@ -103,7 +123,6 @@ function Dashboard({ date }) {
     return (
       <li key={table.table_id} className="shadow-sm list-group-item">
         <div className="d-flex row g-0 justify-content-between reservation-cards text-wrap">
-
           <div className="col-5">
             <div className="mb-1">Table: {table.table_name}</div>
             <div className="">Capacity: {table.capacity}</div>
@@ -111,9 +130,19 @@ function Dashboard({ date }) {
 
           <div className="col-4 px-1 align-self-center justify-content-center">
             {table.reservation_id != null ? (
-              <div className="align-self-center text-muted" data-table-id-status={table.table_id}>Occupied</div>
+              <div
+                className="align-self-center text-muted"
+                data-table-id-status={table.table_id}
+              >
+                Occupied
+              </div>
             ) : (
-              <div className="font-weight-bold align-self-center" data-table-id-status={table.table_id}>Free</div>
+              <div
+                className="font-weight-bold align-self-center"
+                data-table-id-status={table.table_id}
+              >
+                Free
+              </div>
             )}
           </div>
 
@@ -123,7 +152,7 @@ function Dashboard({ date }) {
                 <button
                   className="btn submit-button align-self-center"
                   data-table-id-finish={table.table_id}
-                  onClick={() => handleFinish(table.table_id)}
+                  onClick={() => handleFinish(table.table_id, table.reservation_id)}
                 >
                   Finish
                 </button>
@@ -132,7 +161,6 @@ function Dashboard({ date }) {
               <div className=""></div>
             )}
           </div>
-
         </div>
       </li>
     );
