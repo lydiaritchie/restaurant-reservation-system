@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { listReservations, listTables } from "../utils/api";
+import { listReservations, listTables, deleteTableReservation } from "../utils/api";
 import { useLocation, useHistory, Link } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import { today, previous, next } from "../utils/date-time";
@@ -23,6 +23,7 @@ function Dashboard({ date }) {
   const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
   const [tablesError, setTablesError] = useState(null);
+  const [seatError, setSeatError] = useState(null);
 
   useEffect(loadDashboard, [date]);
 
@@ -53,9 +54,16 @@ function Dashboard({ date }) {
     history.push(`${location.pathname}?date=${dateString}`);
   }
 
-  function handleFinish(event) {
+  async function handleFinish(table_id) {
     if(window.confirm("Is this table ready to seat new guests? This cannot be undone.")){
       console.log("finished");
+      try{
+        await deleteTableReservation(table_id);
+        loadDashboard();
+      } catch (error) {
+        console.log(error);
+        setSeatError(error);
+      }
     }
   }
 
@@ -115,7 +123,7 @@ function Dashboard({ date }) {
                 <button
                   className="btn submit-button align-self-center"
                   data-table-id-finish={t.table_id}
-                  onClick={handleFinish}
+                  onClick={() => handleFinish(t.table_id)}
                 >
                   Finish
                 </button>
@@ -198,6 +206,7 @@ function Dashboard({ date }) {
       </div>
       <ErrorAlert error={reservationsError} />
       <ErrorAlert error={tablesError} />
+      <ErrorAlert error={seatError} />
     </main>
   );
 }

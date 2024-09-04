@@ -146,6 +146,19 @@ async function setReservation(req, res, next) {
   }
 }
 
+async function deleteTableReservation(req, res, next){
+  const table_id = req.params.table_id;
+
+  try{
+    await service.deleteTableReservation(table_id);
+    res.status(200);
+  } catch (error) {
+    console.log(error);
+    next({ status: 400, message: `Could not delete reservation on table ${table_id}`});
+  }
+
+}
+
 module.exports = {
   create: [asyncErrorBoundary(validatePostInputs), asyncErrorBoundary(create)],
   list: [asyncErrorBoundary(list)],
@@ -153,4 +166,5 @@ module.exports = {
     asyncErrorBoundary(validateSetReservation),
     asyncErrorBoundary(setReservation),
   ],
+  destroy: [asyncErrorBoundary(deleteTableReservation)],
 };

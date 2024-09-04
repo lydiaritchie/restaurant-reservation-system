@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
 import { getReservation, listTables, setTableReservation } from "../utils/api";
+import { next } from "../utils/date-time";
 
 
 function SeatReservation() {
@@ -113,8 +114,10 @@ function SeatReservation() {
     ) {
       try {
         const reservationId = reservation.reservation_id;
+        const date = next(reservation.reservation_date.slice(0, 10));
+        const reservationDate = date;
         await setTableReservation(selectedTableId, reservationId);
-        await history.push(`/dashboard`);
+        history.push(`/dashboard/?date=${reservationDate}`);
       } catch (error) {
         console.log(error);
         setCommonError(error);

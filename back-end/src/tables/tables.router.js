@@ -11,6 +11,7 @@ const controller = require("./tables.controller");
 router
     .route("/:table_id/seat")
     .put(controller.setTableReservation)
+    .delete(controller.destroy)
     .all(notFound);
 
 router

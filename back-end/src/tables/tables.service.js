@@ -36,9 +36,20 @@ async function setTableReservation(table_id, new_reservation_id) {
     });
 }
 
+async function deleteTableReservation(table_id){
+  return await knex(tableName)
+    .where({table_id})
+    .update({reservation_id: null})
+    .catch((error) => {
+      console.log(`Could not delete reservation on table ${table_id}`);
+      throw error;
+    })
+}
+
 module.exports = {
   createTable,
   listTables,
   setTableReservation,
   read,
+  deleteTableReservation,
 };
