@@ -99,31 +99,31 @@ function Dashboard({ date }) {
     );
   });
 
-  const tableCards = tables.map((t) => {
+  const tableCards = tables.map((table) => {
     return (
-      <li key={t.table_id} className="shadow-sm list-group-item">
+      <li key={table.table_id} className="shadow-sm list-group-item">
         <div className="d-flex row g-0 justify-content-between reservation-cards text-wrap">
 
           <div className="col-5">
-            <div className="mb-1">Table: {t.table_name}</div>
-            <div className="">Capacity: {t.capacity}</div>
+            <div className="mb-1">Table: {table.table_name}</div>
+            <div className="">Capacity: {table.capacity}</div>
           </div>
 
           <div className="col-4 px-1 align-self-center justify-content-center">
-            {t.reservation_id != null ? (
+            {table.reservation_id != null ? (
               <div className="align-self-center text-muted">Occupied</div>
             ) : (
               <div className="font-weight-bold align-self-center">Free</div>
             )}
           </div>
 
-          <div className="col-3 d-flex flex-column" data-table-id-status={t.table_id}>
-            {t.reservation_id ? (
+          <div className="col-3 d-flex flex-column" data-table-id-status={table.table_id}>
+            {table.reservation_id ? (
               <div className="justify-content-center d-flex">
                 <button
                   className="btn submit-button align-self-center"
-                  data-table-id-finish={t.table_id}
-                  onClick={() => handleFinish(t.table_id)}
+                  data-table-id-finish={table.table_id}
+                  onClick={() => handleFinish(table.table_id)}
                 >
                   Finish
                 </button>
