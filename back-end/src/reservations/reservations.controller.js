@@ -45,6 +45,10 @@ async function validateInputs(req, res, next) {
     return next({ status: 400, message: "reservation_time is not a time" });
   }
 
+  if(inputs.status != "booked"){
+    return next({ status: 400, message: `Status ${inputs.status} is not allowed`});
+  }
+
   next();
 }
 
@@ -120,13 +124,23 @@ async function update(req, res, next) {
   console.log("reservation_id:", reservation_id);
   console.log("status:", status);
 
+  const reservation = await service.getReservation(reservation_id);
+
+  if(!reservation){
+    return next({status: 404, message: `Resevation ${reservation_id} does not exist`});
+  }
+
+  if(reservation.status === "finished"){
+    return next({status: 400, message: "Cannot update status of a finished reservation"});
+  }
+
   if (status === "seated" || status === "booked" || status === "finished") {
     try {
       await service.updateStatus(status, reservation_id);
-      res.status(200).json({data: status});
+      return res.status(200).json({data: {status: status}});
     } catch (error) {
       console.log(error);
-      next({
+      return next({
         status: 400,
         message: `Could not update status: ${status} on reservation ${reservation_id}`,
       });

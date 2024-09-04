@@ -124,8 +124,6 @@ function SeatReservation() {
         const date = next(reservation.reservation_date.slice(0, 10));
         const reservationDate = date;
         await setTableReservation(selectedTableId, reservationId);
-        //update status here
-        await setStatus("seated", reservationId);
         history.push(`/dashboard/?date=${reservationDate}`);
       } catch (error) {
         console.log(error);

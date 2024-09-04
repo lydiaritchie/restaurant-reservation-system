@@ -70,7 +70,7 @@ async function list(req, res, next) {
  * if the table is occupied, return 400 & error message
  */
 
-async function validateSetReservation(req, res, next) {
+async function validateSeatReservation(req, res, next) {
   const data = req.body.data;
 
   if (data === undefined || data === null) {
@@ -128,17 +128,24 @@ async function validateSetReservation(req, res, next) {
     return next({ status: 400, message: "This table is already occupied" });
   }
 
+  if(currentReservation.status === "seated"){
+    return next({status: 400, message: "Reservation already seated"});
+  }
+
+
   next();
 }
 
-async function setReservation(req, res, next) {
+async function seatReservation(req, res, next) {
   const reservation_id = res.locals.reservation_id;
   const table_id = res.locals.table_id;
+
   try {
     const updatedTable = await service.setTableReservation(
       table_id,
       reservation_id
     );
+    await reservationService.updateStatus("seated", reservation_id);
     res.status(200).json({ data: updatedTable });
   } catch (error) {
     console.log(error);
@@ -148,15 +155,11 @@ async function setReservation(req, res, next) {
 
 async function deleteTableReservation(req, res, next){
   const table_id = req.params.table_id;
-  console.log("table_id:", table_id);
   let table;
 
   try{
     const fetchedTable = await service.read(table_id);
     const allTables = await service.listTables();
-    console.log(allTables);
-    console.log("table in try:");
-    console.log(fetchedTable);
     table = fetchedTable;
   } catch (error) {
     console.log(error);
@@ -172,8 +175,11 @@ async function deleteTableReservation(req, res, next){
     return next({status: 400, message: `table ${table_id} is not occupied`});
   }
 
+  const reservation_id = table.reservation_id;
+
   try{
     await service.deleteTableReservation(table_id);
+    await reservationService.updateStatus("finished", reservation_id);
     res.status(200).json({data: `Deleted seating from table ${table_id}`});
   } catch (error) {
     console.log(error);
@@ -184,9 +190,9 @@ async function deleteTableReservation(req, res, next){
 module.exports = {
   create: [asyncErrorBoundary(validatePostInputs), asyncErrorBoundary(create)],
   list: [asyncErrorBoundary(list)],
-  setTableReservation: [
-    asyncErrorBoundary(validateSetReservation),
-    asyncErrorBoundary(setReservation),
+  seatTableReservation: [
+    asyncErrorBoundary(validateSeatReservation),
+    asyncErrorBoundary(seatReservation),
   ],
   destroy: [asyncErrorBoundary(deleteTableReservation)],
 };

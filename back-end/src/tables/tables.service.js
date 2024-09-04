@@ -1,4 +1,3 @@
-const P = require("pino");
 const knex = require("../db/connection");
 
 const tableName = "tables";
