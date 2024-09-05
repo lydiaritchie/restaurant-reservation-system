@@ -88,6 +88,12 @@ export async function getReservation(reservation_id, signal) {
   return await fetchJson(url, { signal }, []);
 }
 
+export async function getReservationByMobileNum(mobileNum, signal){
+  const url = new URL(`${API_BASE_URL}/reservations?mobile_number=${mobileNum}`);
+  console.log("inside api");
+  return await fetchJson(url, {signal});
+}
+
 /**
  * Creates a new reservation.
  */

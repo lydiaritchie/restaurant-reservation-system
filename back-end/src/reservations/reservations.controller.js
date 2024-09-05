@@ -45,8 +45,11 @@ async function validateInputs(req, res, next) {
     return next({ status: 400, message: "reservation_time is not a time" });
   }
 
-  if(inputs.status != "booked"){
-    return next({ status: 400, message: `Status ${inputs.status} is not allowed`});
+  if (inputs.status != "booked") {
+    return next({
+      status: 400,
+      message: `Status ${inputs.status} is not allowed`,
+    });
   }
 
   next();
@@ -110,12 +113,36 @@ async function read(req, res, next) {
 /**
  * List handler for reservation resources
  */
-async function list(req, res) {
-  const date = req.query.date;
-  const allReservations = await service.listReservations(date);
-  res.json({
-    data: allReservations,
-  });
+async function list(req, res, next) {
+  //conditional to check if its a mobile number look up
+  const mobileNum = req.query.mobile_number;
+  console.log("mobileNum:", mobileNum);
+  if (mobileNum) {
+    try {
+      const allMatchingReservations = await service.search(mobileNum);
+      console.log("reservations in controller:", allMatchingReservations);
+      res.json({
+        data: allMatchingReservations,
+      });
+    } catch (error) {
+      console.log(error.message);
+      next({ status: 400, message: `No numbers match ${mobileNum}` });
+    }
+  } else {
+    try {
+      const date = req.query.date;
+      const allReservations = await service.listReservations(date);
+      res.json({
+        data: allReservations,
+      });
+    } catch (error) {
+      console.log(error.message);
+      next({
+        status: 500,
+        message: `An error occured while retrieving reservations`,
+      });
+    }
+  }
 }
 
 async function update(req, res, next) {
@@ -126,18 +153,24 @@ async function update(req, res, next) {
 
   const reservation = await service.getReservation(reservation_id);
 
-  if(!reservation){
-    return next({status: 404, message: `Resevation ${reservation_id} does not exist`});
+  if (!reservation) {
+    return next({
+      status: 404,
+      message: `Resevation ${reservation_id} does not exist`,
+    });
   }
 
-  if(reservation.status.toLowerCase() === "finished"){
-    return next({status: 400, message: "Cannot update status of a finished reservation"});
+  if (reservation.status.toLowerCase() === "finished") {
+    return next({
+      status: 400,
+      message: "Cannot update status of a finished reservation",
+    });
   }
 
   if (status === "seated" || status === "booked" || status === "finished") {
     try {
       await service.updateStatus(status, reservation_id);
-      return res.status(200).json({data: {status: status}});
+      return res.status(200).json({ data: { status: status } });
     } catch (error) {
       console.log(error);
       return next({
@@ -146,7 +179,7 @@ async function update(req, res, next) {
       });
     }
   } else {
-    next({status: 400, message: `${status} is not a valid status`});
+    next({ status: 400, message: `${status} is not a valid status` });
   }
 }
 
