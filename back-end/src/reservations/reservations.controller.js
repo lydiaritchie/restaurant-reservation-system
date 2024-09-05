@@ -116,7 +116,6 @@ async function read(req, res, next) {
 async function list(req, res, next) {
   //conditional to check if its a mobile number look up
   const mobileNum = req.query.mobile_number;
-  console.log("mobileNum:", mobileNum);
   if (mobileNum) {
     try {
       const allMatchingReservations = await service.search(mobileNum);
