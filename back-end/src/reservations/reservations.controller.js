@@ -130,7 +130,7 @@ async function update(req, res, next) {
     return next({status: 404, message: `Resevation ${reservation_id} does not exist`});
   }
 
-  if(reservation.status === "finished"){
+  if(reservation.status.toLowerCase() === "finished"){
     return next({status: 400, message: "Cannot update status of a finished reservation"});
   }
 
@@ -142,7 +142,7 @@ async function update(req, res, next) {
       console.log(error);
       return next({
         status: 400,
-        message: `Could not update status: ${status} on reservation ${reservation_id}`,
+        message: error.message,
       });
     }
   } else {

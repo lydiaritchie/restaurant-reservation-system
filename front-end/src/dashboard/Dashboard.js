@@ -3,7 +3,6 @@ import {
   listReservations,
   listTables,
   deleteTableReservation,
-  setStatus,
 } from "../utils/api";
 import { useLocation, useHistory, Link } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
@@ -69,8 +68,7 @@ function Dashboard({ date }) {
       console.log("finished");
       try {
         await deleteTableReservation(table_id);
-        await setStatus("finished", reservation_id);
-        await loadDashboard();
+        loadDashboard();
       } catch (error) {
         console.log(error);
         setSeatError(error);
