@@ -103,7 +103,7 @@ function Dashboard({ date }) {
             <div className="font-italic">{reservation.mobile_number}</div>
           </div>
 
-          <div className="d-flex col-3 flex-column id">
+          <div className="d-flex col-3 flex-column align-items-end">
             <div className="">ID: {reservation.reservation_id}</div>
             <Link
               className="btn submit-button mt-auto"
@@ -111,6 +111,12 @@ function Dashboard({ date }) {
             >
               Seat
             </Link>
+            <a
+              className="mt-auto edit-button"
+              href={`/reservations/${reservation.reservation_id}/edit`}
+            >
+              Edit
+            </a>
           </div>
         </div>
       </li>
@@ -213,7 +219,7 @@ function Dashboard({ date }) {
 
         <div className="container">
           <div className="d-flex flex-column flex-md-row">
-            <ul className="list-group list ml-3 flex-grow-1">
+            <ul className="list-group mt-3 ml-3 flex-grow-1">
               <div className="row mx-2 justify-content-between">
                 <h4>Reservations:</h4>
                 <a href="#tables" className="d-md-none">
@@ -223,7 +229,7 @@ function Dashboard({ date }) {
               {reservationCards}
             </ul>
 
-            <ul id="tables" className="list-group list ml-3 flex-grow-1">
+            <ul id="tables" className="list-group mt-3 ml-3 flex-grow-1">
               <h4>Tables:</h4>
               {tableCards}
             </ul>

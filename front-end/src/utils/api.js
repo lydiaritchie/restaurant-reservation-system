@@ -88,10 +88,12 @@ export async function getReservation(reservation_id, signal) {
   return await fetchJson(url, { signal }, []);
 }
 
-export async function getReservationByMobileNum(mobileNum, signal){
-  const url = new URL(`${API_BASE_URL}/reservations?mobile_number=${mobileNum}`);
+export async function getReservationByMobileNum(mobileNum, signal) {
+  const url = new URL(
+    `${API_BASE_URL}/reservations?mobile_number=${mobileNum}`
+  );
   console.log("inside api");
-  return await fetchJson(url, {signal});
+  return await fetchJson(url, { signal });
 }
 
 /**
@@ -103,7 +105,7 @@ export async function createReservation(newReservation, signal) {
   const options = {
     method: "POST",
     headers,
-    body: JSON.stringify({ data: newReservation }),
+    body: JSON.stringify({ data: { ...newReservation, status: "booked" } }),
     signal,
   };
   return await fetchJson(url, options, newReservation);
@@ -126,15 +128,15 @@ export async function createTable(newTable, signal) {
 
 /**
  * Set the table reservation id
- * @param {table_id, reservation_id} params 
- * @param {*} signal 
+ * @param {table_id, reservation_id} params
+ * @param {*} signal
  */
-export async function setTableReservation(table_id, reservation_id, signal){
+export async function setTableReservation(table_id, reservation_id, signal) {
   const url = `${API_BASE_URL}/tables/${table_id}/seat`;
   const options = {
     method: "PUT",
     headers,
-    body: JSON.stringify({data: {reservation_id}}),
+    body: JSON.stringify({ data: { reservation_id } }),
     signal,
   };
   return await fetchJson(url, options);
@@ -142,18 +144,18 @@ export async function setTableReservation(table_id, reservation_id, signal){
 
 /**
  * Delete a reservation from a table
- * @param {*} table_id 
- * @param {*} reservation_id 
- * @param {*} signal 
- * @returns 
+ * @param {*} table_id
+ * @param {*} reservation_id
+ * @param {*} signal
+ * @returns
  */
 
-export async function deleteTableReservation(table_id, reservation_id, signal){
+export async function deleteTableReservation(table_id, reservation_id, signal) {
   const url = `${API_BASE_URL}/tables/${table_id}/seat`;
   const options = {
     method: "DELETE",
     headers,
-    body: JSON.stringify({data: {reservation_id}}),
+    body: JSON.stringify({ data: { reservation_id } }),
     signal,
   };
   return await fetchJson(url, options);

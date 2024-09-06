@@ -68,7 +68,7 @@ function Search() {
 
     history.push(`${location.pathname}?mobile_number=${formattedNum}`);
 
-    loadResults(formattedNum);
+    await loadResults(formattedNum);
     setIsSubmitted(true);
   }
 
@@ -106,7 +106,7 @@ function Search() {
             <div className="font-italic">{reservation.mobile_number}</div>
           </div>
 
-          <div className="d-flex col-3 flex-column id">
+          <div className="d-flex col-3 flex-column align-items-end">
             <div className="">ID: {reservation.reservation_id}</div>
             <Link
               className="btn submit-button mt-auto"
@@ -114,6 +114,12 @@ function Search() {
             >
               Seat
             </Link>
+            <a
+              className="mt-auto edit-button"
+              href={`/reservations/${reservation.reservation_id}/edit`}
+            >
+              Edit
+            </a>
           </div>
         </div>
       </li>

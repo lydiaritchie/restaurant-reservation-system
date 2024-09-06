@@ -44,10 +44,6 @@ input {
   justify-content: center;
 }
 
-.green{
-  background-color: green;
-}
-
 .dash-btns{
   color: black;
   border-radius: 10px;
@@ -67,21 +63,14 @@ input {
   background-color: rgb(26, 20, 146);
 }
 
+.edit-button {
+  text-decoration: underline;
+}
 
 .reservation-cards{
-
   justify-content: space-between;
 }
 
-.list{
-  margin-top: 10px;
-
-
-}
-
-.id{
-  align-items: end;
-}
 
 .booked {
   color:  rgb(107, 100, 237);
