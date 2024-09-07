@@ -23,8 +23,6 @@ async function validateInputs(req, res, next) {
     res.locals.newReservation = inputs;
   }
 
-  
-
   //check missing and empty properties
   for (const property of allProperties) {
     if (
@@ -50,7 +48,7 @@ async function validateInputs(req, res, next) {
   //validate time
   const regexp = /^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$/;
   if (!regexp.test(inputs.reservation_time)) {
-    return next({ status: 400, message: "reservation_time is not a time" });
+    return next({ status: 400, message: `reservation_time is not a time ${inputs.reservation_time}` });
   }
 
   if (inputs.status != "booked") {
@@ -191,8 +189,31 @@ async function update(req, res, next) {
   }
 }
 
-async function updateReservation(req, res, next){
+async function reservationExists(req, res, next){
+  const reservation_id = req.params.reservation_id;
+  try{
+    const reservation = await service.getReservation(reservation_id);
+    if(!reservation){
+      return next({status: 404, message: `Reservation ${reservation_id} does not exist`});
+    }
+  } catch (error) {
+    return next({status: 404, message: `Reservation ${reservation_id} does not exist`});
+  }
+  next();
+}
 
+async function updateReservation(req, res, next){
+  const reservation_id = req.params.reservation_id;
+  console.log("in reservation controller");
+  console.log(req.body.data);
+  const newReservation = req.body.data;
+  
+  try{
+    const updatedReservation = await service.update(newReservation, reservation_id);
+    res.status(200).json({data: updatedReservation[0] });
+  } catch (error) {
+    return next({status: 400, message: error.message});
+  }
 }
 
 module.exports = {
@@ -209,6 +230,7 @@ module.exports = {
     asyncErrorBoundary(validateInputs),
     asyncErrorBoundary(validateDate),
     asyncErrorBoundary(validateTime),
+    asyncErrorBoundary(reservationExists),
     asyncErrorBoundary(updateReservation),
   ],
 };

@@ -2,22 +2,26 @@ import React, { useState, useEffect } from "react";
 import { today } from "../utils/date-time";
 import { createReservation } from "../utils/api";
 import ErrorAlert from "../layout/ErrorAlert";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
+import { updateReservation } from "../utils/api";
+import { formatAsTime } from "../utils/date-time";
 
 /**
  * Form component for NewReservation and EditReservation
  */
 
-function ReservationForm({ initialFormState }) {
+function ReservationForm({ initialFormState, status }) {
   //the edit page or new reservation page will pass in the inital form state
   //States to track inputs and errors
 
+  const { reservation_id } = useParams();
+  console.log("reservation_id:", reservation_id);
   //has emtpy states to avoid unmounted error
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
     mobile_number: "",
-    reservation_date: "", 
+    reservation_date: "",
     reservation_time: "",
     people: 0,
   });
@@ -30,8 +34,6 @@ function ReservationForm({ initialFormState }) {
       setFormData({ ...initialFormState });
     }
   }, [initialFormState]);
-
-  console.log(formData);
 
   //helper function validate date
   function validateDate(date) {
@@ -65,8 +67,6 @@ function ReservationForm({ initialFormState }) {
       const todayObj = new Date();
       console.log("dateTimeObj:", dateTimeObj);
       if (dateTimeObj < todayObj) {
-        setError("Cannot book");
-        console.log("in the past and error is:");
         console.log(error);
       }
     }
@@ -99,7 +99,14 @@ function ReservationForm({ initialFormState }) {
         };
         await createReservation(newReservation);
       } else {
-        console.log("updating...");
+        const newReservation = {
+          ...formData,
+          people: Number(formData.people),
+          reservation_time: formatAsTime(formData.reservation_time),
+        };
+        console.log("updating...", newReservation);
+
+        await updateReservation(newReservation, reservation_id, status);
       }
 
       history.push(`/dashboard?date=${formData.reservation_date}`);

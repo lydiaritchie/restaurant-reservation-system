@@ -9,22 +9,22 @@ async function createReservation(newReservation) {
     .then((createdRecords) => createdRecords[0]);
 }
 
-async function getReservation(reservation_id){
+async function getReservation(reservation_id) {
   return knex(tableName)
     .select("*")
-    .where({reservation_id})
+    .where({ reservation_id })
     .then((createdRecords) => createdRecords[0])
     .catch((error) => {
       console.log("Error retrieving reservation:", error.message);
       throw error;
-    })
+    });
 }
 
 async function listReservations(date) {
   return knex(tableName)
     .select("*")
     .where({ reservation_date: date })
-    .whereNot({status: "finished"})
+    .whereNot({ status: "finished" })
     .orderBy("reservation_time", "asc")
     .catch((error) => {
       console.log("Error listing reservations:", error);
@@ -41,13 +41,25 @@ function search(mobile_number) {
     .orderBy("reservation_date");
 }
 
-async function updateStatus(status, reservation_id){
+async function updateStatus(status, reservation_id) {
   return knex(tableName)
-    .where({reservation_id})
-    .update({status: status})
+    .where({ reservation_id })
+    .update({ status: status })
     .catch((error) => {
-      console.log(`Error updating status: ${status} on reservation ${reservation_id}`)
-    })
+      console.log(
+        `Error updating status: ${status} on reservation ${reservation_id}, error:${error}`
+      );
+    });
+}
+
+async function update(newReservation, reservation_id) {
+  return knex(tableName)
+    .where({ reservation_id: reservation_id })
+    .update({...newReservation})
+    .returning("*") // Return the updated row(s) if supported by the database
+    .catch((error) => {
+      console.log(error);
+    });
 }
 
 module.exports = {
@@ -56,4 +68,5 @@ module.exports = {
   listReservations,
   updateStatus,
   search,
+  update,
 };

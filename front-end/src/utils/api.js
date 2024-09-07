@@ -142,14 +142,24 @@ export async function setTableReservation(table_id, reservation_id, signal) {
   return await fetchJson(url, options);
 }
 
-
 /**
  * Update the reservation from edit
  */
-export async function updateReservation(newReservation, signal){
-  //const url = ``
+export async function updateReservation(
+  newReservation,
+  reservation_id,
+  status,
+  signal
+) {
+  const url = `${API_BASE_URL}/reservations/${reservation_id}`;
+  const options = {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({ data: {...newReservation, status:status} }),
+    signal,
+  };
+  return await fetchJson(url, options);
 }
-
 
 /**
  * Delete a reservation from a table
