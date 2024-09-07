@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import ReservationForm from "./ReservationForm";
 
 /**
@@ -7,22 +7,11 @@ import ReservationForm from "./ReservationForm";
 
 function NewReservations() {
 
-
-  const initialFormState = {
-    first_name: "",
-    last_name: "",
-    mobile_number: "",
-    reservation_date: "",
-    reservation_time: "",
-    people: 0,
-  };
-
-
   return (
     <main className="helvetica">
-      <h3 className="date-title m-3">Create Reservation</h3>
+      <h3 className="date-title m-3 form-title">Create Reservation</h3>
       <div>
-        <ReservationForm initialFormState={initialFormState}/>
+        <ReservationForm initialFormState={false}/>
       </div>
     </main>
   );

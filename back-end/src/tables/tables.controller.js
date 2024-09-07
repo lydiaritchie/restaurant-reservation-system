@@ -82,7 +82,7 @@ async function validateSeatReservation(req, res, next) {
 
   //check if values exsist
   if (reservation_id === undefined || reservation_id === null) {
-    return next({ status: 400, message: "Reservation_id is missing" });
+    return next({ status: 400, message: "reservation_id is missing" });
   }
 
   if (table_id === undefined || table_id === null) {
@@ -160,6 +160,8 @@ async function deleteTableReservation(req, res, next){
   try{
     const fetchedTable = await service.read(table_id);
     const allTables = await service.listTables();
+    console.log(table_id);
+    console.log(allTables);
     table = fetchedTable;
   } catch (error) {
     console.log(error);

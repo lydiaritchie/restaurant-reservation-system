@@ -22,10 +22,22 @@ input {
 
 }
 
+.reservation-form{
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+}
+
 .form-components {
   display: flex;
   flex-direction: column;
   font-weight: light;
+}
+
+.form-title {
+  text-align: center;
 }
 
 .dash-title{
@@ -99,7 +111,14 @@ input {
 }
 
 @media (min-width: 768px){
+  .reservation-form{
+    max-width: 500px;
+    margin: 0;
+  }
 
+  .form-title {
+    text-align: start;
+  }
 }
 
 @media (max-width: 348px){

@@ -78,6 +78,7 @@ function Dashboard({ date }) {
 
   const reservationCards = reservations.map((reservation) => {
     const date = next(reservation.reservation_date);
+    const reservation_id = reservation.reservation_id;
     return (
       <li key={reservation.reservation_id} className="shadow-sm list-group-item">
         <div className="d-flex row justify-content-between reservation-cards text-wrap">

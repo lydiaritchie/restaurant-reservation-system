@@ -2,7 +2,8 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 const service = require("./reservations.service");
 
 async function validateInputs(req, res, next) {
-  const inputs = req.body.data;
+  let inputs = req.body.data;
+  console.log("inputs", inputs);
 
   const allProperties = [
     "first_name",
@@ -16,6 +17,13 @@ async function validateInputs(req, res, next) {
   if (!inputs) {
     return next({ status: 400, message: "No inputs sent." });
   }
+
+  if(req.method === "POST"){
+    inputs = ({...inputs, status: "booked"});
+    res.locals.newReservation = inputs;
+  }
+
+  
 
   //check missing and empty properties
   for (const property of allProperties) {
@@ -84,7 +92,8 @@ async function validateTime(req, res, next) {
 
 async function create(req, res, next) {
   try {
-    const createdReservation = await service.createReservation(req.body.data);
+    //add book into it
+    const createdReservation = await service.createReservation(res.locals.newReservation);
     res.status(201).json({ data: createdReservation });
   } catch (error) {
     next({ status: 400, message: "Could not create reservation" });
@@ -182,6 +191,10 @@ async function update(req, res, next) {
   }
 }
 
+async function updateReservation(req, res, next){
+
+}
+
 module.exports = {
   list: asyncErrorBoundary(list),
   create: [
@@ -192,4 +205,10 @@ module.exports = {
   ],
   read: [asyncErrorBoundary(read)],
   update: [asyncErrorBoundary(update)],
+  updateReservation: [
+    asyncErrorBoundary(validateInputs),
+    asyncErrorBoundary(validateDate),
+    asyncErrorBoundary(validateTime),
+    asyncErrorBoundary(updateReservation),
+  ],
 };

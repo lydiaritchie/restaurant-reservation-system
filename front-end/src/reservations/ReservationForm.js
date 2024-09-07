@@ -12,11 +12,24 @@ function ReservationForm({ initialFormState }) {
   //the edit page or new reservation page will pass in the inital form state
   //States to track inputs and errors
 
-  console.log("initalFormState:", initialFormState);
-
-  const [formData, setFormData] = useState({ ...initialFormState });
+  //has emtpy states to avoid unmounted error
+  const [formData, setFormData] = useState({
+    first_name: "",
+    last_name: "",
+    mobile_number: "",
+    reservation_date: "", 
+    reservation_time: "",
+    people: 0,
+  });
   const [error, setError] = useState("");
   const history = useHistory();
+
+  //if the form is being used to edit a reservation
+  useEffect(() => {
+    if (initialFormState) {
+      setFormData({ ...initialFormState });
+    }
+  }, [initialFormState]);
 
   console.log(formData);
 
@@ -77,9 +90,9 @@ function ReservationForm({ initialFormState }) {
 
     event.preventDefault();
 
-    //if initalFormState had reservation_id of null, it is a new form and do this:
+    //if isNew, it is a new form and do this:
     try {
-      if (!initialFormState.reservation_id) {
+      if (!initialFormState) {
         const newReservation = {
           ...formData,
           people: Number(formData.people),
@@ -97,8 +110,8 @@ function ReservationForm({ initialFormState }) {
   }
 
   return (
-    <main className="helvetica">
-      <form className="col" onSubmit={handleSubmit}>
+    <main className="helvetica align-content-center">
+      <form className="reservation-form col" onSubmit={handleSubmit}>
         <label className="form-components">
           First Name
           <input

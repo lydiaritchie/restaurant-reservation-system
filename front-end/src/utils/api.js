@@ -105,7 +105,7 @@ export async function createReservation(newReservation, signal) {
   const options = {
     method: "POST",
     headers,
-    body: JSON.stringify({ data: { ...newReservation, status: "booked" } }),
+    body: JSON.stringify({ data: newReservation }),
     signal,
   };
   return await fetchJson(url, options, newReservation);
@@ -141,6 +141,15 @@ export async function setTableReservation(table_id, reservation_id, signal) {
   };
   return await fetchJson(url, options);
 }
+
+
+/**
+ * Update the reservation from edit
+ */
+export async function updateReservation(newReservation, signal){
+  //const url = ``
+}
+
 
 /**
  * Delete a reservation from a table

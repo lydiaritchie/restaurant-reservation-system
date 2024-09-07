@@ -40,7 +40,7 @@ describe("US-05 - Finish an occupied table", () => {
 
     test("returns 400 if table_id is not occupied.", async () => {
       const response = await request(app)
-        .delete("/tables/1/seat")
+        .delete("/tables/7/seat")
         .set("Accept", "application/json")
         .send({});
 
