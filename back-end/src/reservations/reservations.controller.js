@@ -193,10 +193,12 @@ async function reservationExists(req, res, next){
   const reservation_id = req.params.reservation_id;
   try{
     const reservation = await service.getReservation(reservation_id);
-    if(!reservation){
-      return next({status: 404, message: `Reservation ${reservation_id} does not exist`});
-    }
+    res.locals.reservation = reservation;
   } catch (error) {
+    return next({status: 404, message: `Reservation ${reservation_id} does not exist`});
+  }
+
+  if(!res.locals.reservation){
     return next({status: 404, message: `Reservation ${reservation_id} does not exist`});
   }
   next();
@@ -227,10 +229,10 @@ module.exports = {
   read: [asyncErrorBoundary(read)],
   update: [asyncErrorBoundary(update)],
   updateReservation: [
+    asyncErrorBoundary(reservationExists),
     asyncErrorBoundary(validateInputs),
     asyncErrorBoundary(validateDate),
     asyncErrorBoundary(validateTime),
-    asyncErrorBoundary(reservationExists),
     asyncErrorBoundary(updateReservation),
   ],
 };

@@ -179,3 +179,18 @@ export async function deleteTableReservation(table_id, reservation_id, signal) {
   };
   return await fetchJson(url, options);
 }
+
+
+/**
+ * Update a reservation to have a status of cancelled
+ */
+export async function setReservationCancel(reservation_id, signal){
+  const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
+  const options ={
+    method: "PUT",
+    headers,
+    body: JSON.stringify({data: "cancelled" }),
+    signal,
+  };
+  return await fetchJson(url, options);
+}

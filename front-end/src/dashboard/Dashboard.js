@@ -3,6 +3,7 @@ import {
   listReservations,
   listTables,
   deleteTableReservation,
+  setReservationCancel,
 } from "../utils/api";
 import { useLocation, useHistory, Link } from "react-router-dom";
 import ErrorAlert from "../layout/ErrorAlert";
@@ -58,8 +59,7 @@ function Dashboard({ date }) {
     history.push(`${location.pathname}?date=${dateString}`);
   }
 
-  async function handleFinish(table_id, reservation_id) {
-
+  async function handleFinish(table_id) {
     if (
       window.confirm(
         "Is this table ready to seat new guests? This cannot be undone."
@@ -76,11 +76,29 @@ function Dashboard({ date }) {
     }
   }
 
+  async function handleCancel(event, reservation_id){
+    console.log(event);
+    event.target.blur();
+    if(window.confirm("Do you want to cancel this reservation? This cannot be undone.")){
+      console.log("cancelled");
+      try{
+        await setReservationCancel(reservation_id);
+        loadDashboard();
+      } catch(error){
+        console.log(error);
+        setReservationsError(error);
+      }
+    }
+  }
+
   const reservationCards = reservations.map((reservation) => {
     const date = next(reservation.reservation_date);
     const reservation_id = reservation.reservation_id;
     return (
-      <li key={reservation.reservation_id} className="shadow-sm list-group-item">
+      <li
+        key={reservation.reservation_id}
+        className="shadow-sm list-group-item"
+      >
         <div className="d-flex row justify-content-between reservation-cards text-wrap">
           <div className="col-9">
             <div className="d-flex">
@@ -99,7 +117,11 @@ function Dashboard({ date }) {
             <div className="mt-1 font-weight-bold">
               {reservation.reservation_time.slice(0, 5)}
             </div>
-            {reservation.people > 1 ? <>{reservation.people} people</> : <>{reservation.people} person</>}
+            {reservation.people > 1 ? (
+              <>{reservation.people} people</>
+            ) : (
+              <>{reservation.people} person</>
+            )}
             <div className="fs-5">{formatDate(date)}</div>
             <div className="font-italic">{reservation.mobile_number}</div>
           </div>
@@ -112,12 +134,22 @@ function Dashboard({ date }) {
             >
               Seat
             </Link>
-            <a
-              className="mt-auto edit-button"
-              href={`/reservations/${reservation.reservation_id}/edit`}
-            >
-              Edit
-            </a>
+
+            <div className="d-flex mt-auto align-items-baseline">
+              <a
+                className="mr-3 edit-button"
+                href={`/reservations/${reservation.reservation_id}/edit`}
+              >
+                Edit
+              </a>
+              <button
+                className="btn btn-outline-danger py-0 ml-1"
+                data-reservation-id-cancel={reservation.reservation_id}
+                onClick={(event) => handleCancel(event, reservation.reservation_id)}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       </li>
@@ -157,7 +189,9 @@ function Dashboard({ date }) {
                 <button
                   className="btn submit-button align-self-center"
                   data-table-id-finish={table.table_id}
-                  onClick={() => handleFinish(table.table_id, table.reservation_id)}
+                  onClick={() =>
+                    handleFinish(table.table_id, table.reservation_id)
+                  }
                 >
                   Finish
                 </button>
