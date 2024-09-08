@@ -155,7 +155,7 @@ export async function updateReservation(
   const options = {
     method: "PUT",
     headers,
-    body: JSON.stringify({ data: {...newReservation, status:status} }),
+    body: JSON.stringify({ data: {...newReservation, status: status} }),
     signal,
   };
   return await fetchJson(url, options);
@@ -189,7 +189,7 @@ export async function setReservationCancel(reservation_id, signal){
   const options ={
     method: "PUT",
     headers,
-    body: JSON.stringify({data: "cancelled" }),
+    body: JSON.stringify({data: {status: "cancelled"} }),
     signal,
   };
   return await fetchJson(url, options);

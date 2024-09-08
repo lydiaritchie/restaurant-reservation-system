@@ -173,7 +173,7 @@ async function update(req, res, next) {
     });
   }
 
-  if (status === "seated" || status === "booked" || status === "finished") {
+  if (status === "seated" || status === "booked" || status === "finished" || status === "cancelled") {
     try {
       await service.updateStatus(status, reservation_id);
       return res.status(200).json({ data: { status: status } });

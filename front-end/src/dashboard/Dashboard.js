@@ -65,7 +65,6 @@ function Dashboard({ date }) {
         "Is this table ready to seat new guests? This cannot be undone."
       )
     ) {
-      console.log("finished");
       try {
         await deleteTableReservation(table_id);
         loadDashboard();
@@ -77,10 +76,8 @@ function Dashboard({ date }) {
   }
 
   async function handleCancel(event, reservation_id){
-    console.log(event);
     event.target.blur();
     if(window.confirm("Do you want to cancel this reservation? This cannot be undone.")){
-      console.log("cancelled");
       try{
         await setReservationCancel(reservation_id);
         loadDashboard();
