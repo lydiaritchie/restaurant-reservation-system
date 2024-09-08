@@ -75,13 +75,17 @@ function Dashboard({ date }) {
     }
   }
 
-  async function handleCancel(event, reservation_id){
+  async function handleCancel(event, reservation_id) {
     event.target.blur();
-    if(window.confirm("Do you want to cancel this reservation? This cannot be undone.")){
-      try{
+    if (
+      window.confirm(
+        "Do you want to cancel this reservation? This cannot be undone."
+      )
+    ) {
+      try {
         await setReservationCancel(reservation_id);
         loadDashboard();
-      } catch(error){
+      } catch (error) {
         console.log(error);
         setReservationsError(error);
       }
@@ -125,12 +129,16 @@ function Dashboard({ date }) {
 
           <div className="d-flex col-3 flex-column align-items-end">
             <div className="">ID: {reservation.reservation_id}</div>
-            <Link
-              className="btn submit-button mt-auto"
-              to={`/reservations/${reservation.reservation_id}/seat`}
-            >
-              Seat
-            </Link>
+            {reservation.status === "seated" ? (
+              <></>
+            ) : (
+              <Link
+                className="btn submit-button mt-auto"
+                to={`/reservations/${reservation.reservation_id}/seat`}
+              >
+                Seat
+              </Link>
+            )}
 
             <div className="d-flex mt-auto align-items-baseline">
               <a
@@ -142,7 +150,9 @@ function Dashboard({ date }) {
               <button
                 className="btn btn-outline-danger py-0 ml-1"
                 data-reservation-id-cancel={reservation.reservation_id}
-                onClick={(event) => handleCancel(event, reservation.reservation_id)}
+                onClick={(event) =>
+                  handleCancel(event, reservation.reservation_id)
+                }
               >
                 Cancel
               </button>

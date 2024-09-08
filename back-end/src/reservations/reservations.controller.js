@@ -3,7 +3,7 @@ const service = require("./reservations.service");
 
 async function validateInputs(req, res, next) {
   let inputs = req.body.data;
-  console.log("inputs", inputs);
+  //console.log("inputs", inputs);
 
   const allProperties = [
     "first_name",
@@ -19,6 +19,9 @@ async function validateInputs(req, res, next) {
   }
 
   if(req.method === "POST"){
+    if(inputs.status === "finished" || inputs.status === "seated"){
+      return next({status: 400, message: "Cannot create reservations with a status of seated or finished"});
+    }
     inputs = ({...inputs, status: "booked"});
     res.locals.newReservation = inputs;
   }
