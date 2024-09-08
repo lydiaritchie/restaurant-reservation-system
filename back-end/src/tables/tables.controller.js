@@ -77,7 +77,7 @@ async function validateSeatReservation(req, res, next) {
     return next({ status: 400, message: "Data is missing" });
   }
 
-  const {reservation_id}  = data;
+  const { reservation_id } = data;
   const table_id = req.params.table_id;
 
   //check if values exsist
@@ -98,9 +98,8 @@ async function validateSeatReservation(req, res, next) {
 
   //get table and reservation
   try {
-    currentReservation = await reservationService.getReservation(
-      reservation_id
-    );
+    currentReservation =
+      await reservationService.getReservation(reservation_id);
     currentTable = await service.read(table_id);
   } catch (error) {
     console.log("error:", error);
@@ -128,10 +127,9 @@ async function validateSeatReservation(req, res, next) {
     return next({ status: 400, message: "This table is already occupied" });
   }
 
-  if(currentReservation.status === "seated"){
-    return next({status: 400, message: "Reservation already seated"});
+  if (currentReservation.status === "seated") {
+    return next({ status: 400, message: "Reservation already seated" });
   }
-
 
   next();
 }
@@ -143,7 +141,7 @@ async function seatReservation(req, res, next) {
   try {
     const updatedTable = await service.setTableReservation(
       table_id,
-      reservation_id
+      reservation_id,
     );
     await reservationService.updateStatus("seated", reservation_id);
     res.status(200).json({ data: updatedTable });
@@ -153,11 +151,11 @@ async function seatReservation(req, res, next) {
   }
 }
 
-async function deleteTableReservation(req, res, next){
+async function deleteTableReservation(req, res, next) {
   const table_id = req.params.table_id;
   let table;
 
-  try{
+  try {
     const fetchedTable = await service.read(table_id);
     const allTables = await service.listTables();
     console.log(table_id);
@@ -169,23 +167,26 @@ async function deleteTableReservation(req, res, next){
 
   console.log("table:", table);
 
-  if(!table) {
-    return next({ status: 404, message: `table ${table_id} does not exist`});
+  if (!table) {
+    return next({ status: 404, message: `table ${table_id} does not exist` });
   }
 
-  if(table.reservation_id === null){
-    return next({status: 400, message: `table ${table_id} is not occupied`});
+  if (table.reservation_id === null) {
+    return next({ status: 400, message: `table ${table_id} is not occupied` });
   }
 
   const reservation_id = table.reservation_id;
 
-  try{
+  try {
     await service.deleteTableReservation(table_id);
     await reservationService.updateStatus("finished", reservation_id);
-    res.status(200).json({data: `Deleted seating from table ${table_id}`});
+    res.status(200).json({ data: `Deleted seating from table ${table_id}` });
   } catch (error) {
     console.log(error);
-    next({ status: 400, message: `Could not delete reservation on table ${table_id}`});
+    next({
+      status: 400,
+      message: `Could not delete reservation on table ${table_id}`,
+    });
   }
 }
 

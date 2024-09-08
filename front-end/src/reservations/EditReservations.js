@@ -5,13 +5,12 @@ import ErrorAlert from "../layout/ErrorAlert";
 import { getReservation } from "../utils/api";
 import { next } from "../utils/date-time";
 
-
 /**
  * Defines editor page for reservations
  * @returns {JSX.Element}
  */
-function EditReservations(){
-  const {reservation_id} = useParams();
+function EditReservations() {
+  const { reservation_id } = useParams();
   const [reservation, setReservation] = useState({
     first_name: "",
     last_name: "",
@@ -49,24 +48,23 @@ function EditReservations(){
         }
       }
     }
-  
+
     fetchReservation();
-  
+
     // Cleanup function to run when the component unmounts
     return () => {
       isMounted = false; // Set the flag to false when unmounting
     };
   }, [reservation_id]);
 
-
-    return (
-        <main>
-          <h3 className="date-title mt-3 text-center">Edit Reservation</h3>
-          <div>
-            <ReservationForm initialFormState={reservation} status={status}/>
-          </div>
-        </main>
-    );
+  return (
+    <main>
+      <h3 className="date-title mt-3 text-center">Edit Reservation</h3>
+      <div>
+        <ReservationForm initialFormState={reservation} status={status} />
+      </div>
+    </main>
+  );
 }
 
 export default EditReservations;

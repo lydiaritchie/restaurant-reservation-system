@@ -24,7 +24,7 @@ function SeatReservation() {
         setReservationError(null);
         const reservationData = await getReservation(
           reservation_id,
-          abortController.signal
+          abortController.signal,
         );
 
         setReservation(reservationData);
@@ -80,19 +80,14 @@ function SeatReservation() {
     });
     console.log(currentTable);
 
-    const capacity = await target.options[target.selectedIndex].getAttribute(
-      "data-capacity"
-    );
+    const capacity =
+      await target.options[target.selectedIndex].getAttribute("data-capacity");
 
     if (currentTable.reservation_id != null) {
       setTablesError("This table is already occupied");
     }
     //check if there are any errors, if they haven't selected anything or if the capacity is too large
-    else if (
-      
-      target.value !== "select" &&
-      reservation.people > capacity
-    ) {
+    else if (target.value !== "select" && reservation.people > capacity) {
       setTablesError("Reservation capacity is greater table capacity.");
     } else {
       setTablesError(null);

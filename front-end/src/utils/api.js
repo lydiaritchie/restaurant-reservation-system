@@ -61,7 +61,7 @@ async function fetchJson(url, options, onCancel) {
 export async function listReservations(params, signal) {
   const url = new URL(`${API_BASE_URL}/reservations`);
   Object.entries(params).forEach(([key, value]) =>
-    url.searchParams.append(key, value.toString())
+    url.searchParams.append(key, value.toString()),
   );
   return await fetchJson(url, { headers, signal }, [])
     .then(formatReservationDate)
@@ -90,7 +90,7 @@ export async function getReservation(reservation_id, signal) {
 
 export async function getReservationByMobileNum(mobileNum, signal) {
   const url = new URL(
-    `${API_BASE_URL}/reservations?mobile_number=${mobileNum}`
+    `${API_BASE_URL}/reservations?mobile_number=${mobileNum}`,
   );
   console.log("inside api");
   return await fetchJson(url, { signal });
@@ -149,13 +149,13 @@ export async function updateReservation(
   newReservation,
   reservation_id,
   status,
-  signal
+  signal,
 ) {
   const url = `${API_BASE_URL}/reservations/${reservation_id}`;
   const options = {
     method: "PUT",
     headers,
-    body: JSON.stringify({ data: {...newReservation, status: status} }),
+    body: JSON.stringify({ data: { ...newReservation, status: status } }),
     signal,
   };
   return await fetchJson(url, options);
@@ -180,16 +180,15 @@ export async function deleteTableReservation(table_id, reservation_id, signal) {
   return await fetchJson(url, options);
 }
 
-
 /**
  * Update a reservation to have a status of cancelled
  */
-export async function setReservationCancel(reservation_id, signal){
+export async function setReservationCancel(reservation_id, signal) {
   const url = `${API_BASE_URL}/reservations/${reservation_id}/status`;
-  const options ={
+  const options = {
     method: "PUT",
     headers,
-    body: JSON.stringify({data: {status: "cancelled"} }),
+    body: JSON.stringify({ data: { status: "cancelled" } }),
     signal,
   };
   return await fetchJson(url, options);

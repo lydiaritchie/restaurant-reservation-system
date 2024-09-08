@@ -1,10 +1,9 @@
 .helvetica {
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", 
-  Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
+    Helvetica, Arial, "Lucida Grande", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
 }
-
 
 .side-bar {
   background-color: rgb(107, 100, 237);
@@ -19,10 +18,9 @@
 
 input {
   margin-top: 5;
-
 }
 
-.reservation-form{
+.reservation-form {
   max-width: 500px;
   margin-left: auto;
   margin-right: auto;
@@ -40,15 +38,15 @@ input {
   text-align: center;
 }
 
-.dash-title{
-  margin-top:7px;
-  display:flex;
+.dash-title {
+  margin-top: 7px;
+  display: flex;
   flex-direction: column;
-  align-items:center;
-  justify-content:space-between;
+  align-items: center;
+  justify-content: space-between;
 }
 
-.search-title  {
+.search-title {
   margin-top: 7px;
   display: flex;
   flex-direction: column;
@@ -56,13 +54,13 @@ input {
   justify-content: center;
 }
 
-.dash-btns{
+.dash-btns {
   color: black;
   border-radius: 10px;
 }
 
-.dash-btns:hover{
-  color:rgb(107, 100, 237);
+.dash-btns:hover {
+  color: rgb(107, 100, 237);
 }
 
 .submit-button {
@@ -71,7 +69,7 @@ input {
 }
 
 .submit-button:hover {
-  color:white;
+  color: white;
   background-color: rgb(26, 20, 146);
 }
 
@@ -79,14 +77,13 @@ input {
   text-decoration: underline;
 }
 
-.reservation-cards{
+.reservation-cards {
   justify-content: space-between;
 }
 
-
 .booked {
-  color:  rgb(107, 100, 237);
-  border-color:  rgb(107, 100, 237);
+  color: rgb(107, 100, 237);
+  border-color: rgb(107, 100, 237);
 }
 .search-input {
   width: 80%;
@@ -100,18 +97,16 @@ input {
   justify-content: center;
 }
 
-
-
-@media (max-width:310px){
-  .dash-title{
-    display:flex;
+@media (max-width: 310px) {
+  .dash-title {
+    display: flex;
     flex-direction: column;
     text-align: center;
   }
 }
 
-@media (min-width: 768px){
-  .reservation-form{
+@media (min-width: 768px) {
+  .reservation-form {
     max-width: 500px;
     margin: 0;
   }
@@ -121,17 +116,16 @@ input {
   }
 }
 
-@media (max-width: 348px){
-  .reservation-cards{
-    display:flex;
+@media (max-width: 348px) {
+  .reservation-cards {
+    display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
   }
 
-  .id{
+  .id {
     margin: 0;
     align-items: center;
   }
-
 }

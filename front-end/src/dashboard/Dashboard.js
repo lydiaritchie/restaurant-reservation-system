@@ -62,7 +62,7 @@ function Dashboard({ date }) {
   async function handleFinish(table_id) {
     if (
       window.confirm(
-        "Is this table ready to seat new guests? This cannot be undone."
+        "Is this table ready to seat new guests? This cannot be undone.",
       )
     ) {
       try {
@@ -79,7 +79,7 @@ function Dashboard({ date }) {
     event.target.blur();
     if (
       window.confirm(
-        "Do you want to cancel this reservation? This cannot be undone."
+        "Do you want to cancel this reservation? This cannot be undone.",
       )
     ) {
       try {

@@ -1,10 +1,11 @@
 exports.up = function (knex) {
   return knex.schema.table("reservations", (table) => {
-    table.string("status").notNullable();});
+    table.string("status").notNullable();
+  });
 };
 
 exports.down = function (knex) {
-    return knex.schema.table('reservations', table => {
-        table.dropColumn("status");
-    })
+  return knex.schema.table("reservations", (table) => {
+    table.dropColumn("status");
+  });
 };

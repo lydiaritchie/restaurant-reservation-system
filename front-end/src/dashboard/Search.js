@@ -37,13 +37,12 @@ function Search() {
     try {
       const fetchedResults = await getReservationByMobileNum(
         formattedNum,
-        abortController.signal
+        abortController.signal,
       );
       console.log("fetchedResults: ", fetchedResults);
       setReservations(fetchedResults);
     } catch (error) {
       setInputError(error);
-
     }
     return () => abortController.abort();
   }
@@ -152,7 +151,6 @@ function Search() {
             <ul className="list-group list ml-3 flex-grow-1">
               {reservationCards}
             </ul>
-            
           </div>
 
           {isSubmitted && reservations.length === 0 ? (

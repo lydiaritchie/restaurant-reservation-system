@@ -12,19 +12,19 @@ function NewTable() {
   const initalFormState = {
     table_name: "",
     capacity: 0,
-  }
+  };
 
-  const [formData, setFormData] = useState({...initalFormState});
+  const [formData, setFormData] = useState({ ...initalFormState });
 
   //handle change to form inputs
-  async function handleChange({target}){
+  async function handleChange({ target }) {
     setFormData({
-        ...formData,
-        [target.name]: target.value,
-    })
+      ...formData,
+      [target.name]: target.value,
+    });
   }
 
-  async function handleSubmit(event){
+  async function handleSubmit(event) {
     event.preventDefault();
 
     const newTable = {
@@ -32,13 +32,13 @@ function NewTable() {
       capacity: Number(formData.capacity),
     };
 
-    try{
-        //saves the table to the database 
-        await createTable(newTable);
-        history.push(`/dashboard`);
-    } catch(error) {
-        console.log(error);
-        ErrorAlert(error);
+    try {
+      //saves the table to the database
+      await createTable(newTable);
+      history.push(`/dashboard`);
+    } catch (error) {
+      console.log(error);
+      ErrorAlert(error);
     }
   }
 
@@ -46,26 +46,25 @@ function NewTable() {
     <main className="helvetica">
       <h3 className="date-title m-3">Create Table</h3>
       <form className="col" onSubmit={handleSubmit}>
-
         <label className="form-components">
           Table Name
-          <input 
-          name="table_name" 
-          value={formData.table_name}
-          onChange={handleChange}
-          minLength="2"
-          required
+          <input
+            name="table_name"
+            value={formData.table_name}
+            onChange={handleChange}
+            minLength="2"
+            required
           />
         </label>
         <label className="form-components">
           Capacity
-          <input 
-          name="capacity" 
-          min="1" 
-          type="number"
-          value={formData.capacity}
-          onChange={handleChange}
-          required
+          <input
+            name="capacity"
+            min="1"
+            type="number"
+            value={formData.capacity}
+            onChange={handleChange}
+            required
           />
         </label>
 

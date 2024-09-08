@@ -25,7 +25,7 @@ async function listReservations(date) {
     .select("*")
     .where({ reservation_date: date })
     .whereNot({ status: "finished" })
-    .whereNot({status: "cancelled"})
+    .whereNot({ status: "cancelled" })
     .orderBy("reservation_time", "asc")
     .catch((error) => {
       console.log("Error listing reservations:", error);
@@ -37,7 +37,7 @@ function search(mobile_number) {
   return knex("reservations")
     .whereRaw(
       "translate(mobile_number, '() -', '') like ?",
-      `%${mobile_number.replace(/\D/g, "")}%`
+      `%${mobile_number.replace(/\D/g, "")}%`,
     )
     .orderBy("reservation_date");
 }
@@ -48,7 +48,7 @@ async function updateStatus(status, reservation_id) {
     .update({ status: status })
     .catch((error) => {
       console.log(
-        `Error updating status: ${status} on reservation ${reservation_id}, error:${error}`
+        `Error updating status: ${status} on reservation ${reservation_id}, error:${error}`,
       );
     });
 }
@@ -56,7 +56,7 @@ async function updateStatus(status, reservation_id) {
 async function update(newReservation, reservation_id) {
   return knex(tableName)
     .where({ reservation_id: reservation_id })
-    .update({...newReservation})
+    .update({ ...newReservation })
     .returning("*") // Return the updated row(s) if supported by the database
     .catch((error) => {
       console.log(error);

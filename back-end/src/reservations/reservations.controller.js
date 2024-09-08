@@ -18,11 +18,15 @@ async function validateInputs(req, res, next) {
     return next({ status: 400, message: "No inputs sent." });
   }
 
-  if(req.method === "POST"){
-    if(inputs.status === "finished" || inputs.status === "seated"){
-      return next({status: 400, message: "Cannot create reservations with a status of seated or finished"});
+  if (req.method === "POST") {
+    if (inputs.status === "finished" || inputs.status === "seated") {
+      return next({
+        status: 400,
+        message:
+          "Cannot create reservations with a status of seated or finished",
+      });
     }
-    inputs = ({...inputs, status: "booked"});
+    inputs = { ...inputs, status: "booked" };
     res.locals.newReservation = inputs;
   }
 
@@ -51,7 +55,10 @@ async function validateInputs(req, res, next) {
   //validate time
   const regexp = /^(2[0-3]|[01]?[0-9]):([0-5]?[0-9])$/;
   if (!regexp.test(inputs.reservation_time)) {
-    return next({ status: 400, message: `reservation_time is not a time ${inputs.reservation_time}` });
+    return next({
+      status: 400,
+      message: `reservation_time is not a time ${inputs.reservation_time}`,
+    });
   }
 
   if (inputs.status != "booked") {
@@ -94,7 +101,9 @@ async function validateTime(req, res, next) {
 async function create(req, res, next) {
   try {
     //add book into it
-    const createdReservation = await service.createReservation(res.locals.newReservation);
+    const createdReservation = await service.createReservation(
+      res.locals.newReservation,
+    );
     res.status(201).json({ data: createdReservation });
   } catch (error) {
     next({ status: 400, message: "Could not create reservation" });
@@ -176,7 +185,12 @@ async function update(req, res, next) {
     });
   }
 
-  if (status === "seated" || status === "booked" || status === "finished" || status === "cancelled") {
+  if (
+    status === "seated" ||
+    status === "booked" ||
+    status === "finished" ||
+    status === "cancelled"
+  ) {
     try {
       await service.updateStatus(status, reservation_id);
       return res.status(200).json({ data: { status: status } });
@@ -192,32 +206,41 @@ async function update(req, res, next) {
   }
 }
 
-async function reservationExists(req, res, next){
+async function reservationExists(req, res, next) {
   const reservation_id = req.params.reservation_id;
-  try{
+  try {
     const reservation = await service.getReservation(reservation_id);
     res.locals.reservation = reservation;
   } catch (error) {
-    return next({status: 404, message: `Reservation ${reservation_id} does not exist`});
+    return next({
+      status: 404,
+      message: `Reservation ${reservation_id} does not exist`,
+    });
   }
 
-  if(!res.locals.reservation){
-    return next({status: 404, message: `Reservation ${reservation_id} does not exist`});
+  if (!res.locals.reservation) {
+    return next({
+      status: 404,
+      message: `Reservation ${reservation_id} does not exist`,
+    });
   }
   next();
 }
 
-async function updateReservation(req, res, next){
+async function updateReservation(req, res, next) {
   const reservation_id = req.params.reservation_id;
   console.log("in reservation controller");
   console.log(req.body.data);
   const newReservation = req.body.data;
-  
-  try{
-    const updatedReservation = await service.update(newReservation, reservation_id);
-    res.status(200).json({data: updatedReservation[0] });
+
+  try {
+    const updatedReservation = await service.update(
+      newReservation,
+      reservation_id,
+    );
+    res.status(200).json({ data: updatedReservation[0] });
   } catch (error) {
-    return next({status: 400, message: error.message});
+    return next({ status: 400, message: error.message });
   }
 }
 

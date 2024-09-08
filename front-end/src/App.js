@@ -8,9 +8,9 @@ import Layout from "./layout/Layout";
  */
 function App() {
   return (
-    <Switch> 
+    <Switch>
       <Route path="/">
-        <Layout  className="background"/>
+        <Layout className="background" />
       </Route>
     </Switch>
   );
