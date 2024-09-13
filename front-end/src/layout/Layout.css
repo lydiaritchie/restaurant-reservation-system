@@ -1,4 +1,131 @@
+.helvetica {
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue",
+    Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
 .side-bar {
-  background-color: #393a44;
+  background-color: rgb(107, 100, 237);
   min-width: 200px;
+}
+
+.date-title {
+  font-style: italic;
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  margin-top: 5;
+}
+
+.reservation-form {
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-components {
+  display: flex;
+  flex-direction: column;
+  font-weight: light;
+}
+
+.form-title {
+  text-align: center;
+}
+
+.dash-title {
+  margin-top: 7px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.search-title {
+  margin-top: 7px;
+  display: flex;
+  flex-direction: column;
+  align-items: baseline;
+  justify-content: center;
+}
+
+.dash-btns {
+  color: black;
+  border-radius: 10px;
+}
+
+.dash-btns:hover {
+  color: rgb(107, 100, 237);
+}
+
+.submit-button {
+  background-color: rgb(107, 100, 237);
+  color: white;
+}
+
+.submit-button:hover {
+  color: white;
+  background-color: rgb(26, 20, 146);
+}
+
+.edit-button {
+  text-decoration: underline;
+}
+
+.reservation-cards {
+  justify-content: space-between;
+}
+
+.booked {
+  color: rgb(107, 100, 237);
+  border-color: rgb(107, 100, 237);
+}
+.search-input {
+  width: 80%;
+  max-width: 500px;
+}
+
+.search-div {
+  display: flex;
+  width: 100%;
+  align-items: baseline;
+  justify-content: center;
+}
+
+@media (max-width: 310px) {
+  .dash-title {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+@media (min-width: 768px) {
+  .reservation-form {
+    max-width: 500px;
+    margin: 0;
+  }
+
+  .form-title {
+    text-align: start;
+  }
+}
+
+@media (max-width: 348px) {
+  .reservation-cards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .id {
+    margin: 0;
+    align-items: center;
+  }
 }
