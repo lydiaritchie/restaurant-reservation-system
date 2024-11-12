@@ -56,9 +56,9 @@ module.exports = {
     client: "postgresql",
     pool: { min: 1, max: 5 },
     connection: DATABASE_URL,
-    migrations: {
+    /*migrations: {
       directory: path.join(__dirname, "src", "db", "migrations"),
-    },
+    },*/
     seeds: {
       directory: path.join(__dirname, "src", "db", "seeds"),
     },
