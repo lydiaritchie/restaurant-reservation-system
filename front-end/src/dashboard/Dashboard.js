@@ -94,7 +94,6 @@ function Dashboard({ date }) {
 
   const reservationCards = reservations.map((reservation) => {
     const date = next(reservation.reservation_date);
-    const reservation_id = reservation.reservation_id;
     return (
       <li
         key={reservation.reservation_id}
